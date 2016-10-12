@@ -48,6 +48,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Build;
@@ -162,7 +163,7 @@ public abstract class ARActivity extends /*AppCompat*/Activity implements Camera
         }
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         AndroidUtils.reportDisplayInformation(this);
     }
@@ -274,9 +275,23 @@ public abstract class ARActivity extends /*AppCompat*/Activity implements Camera
 
         Log.i(TAG, "onResume(): GLSurfaceView created");
 
+        Point windowSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(windowSize);
+        // Assumes landscape orientation
+        float aspectRatio = 4.0f / 3.f;
+        int height = windowSize.y;
+        int width = Math.round(height * aspectRatio);
+
+        if (width > windowSize.x) {
+            // For portrait screens instead...
+            width = windowSize.x;
+            height = Math.round(width * aspectRatio);
+        }
+
         // Add the views to the interface
-        mainLayout.addView(preview, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        mainLayout.addView(glView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        mainLayout.addView(preview, new LayoutParams(width, height));
+        mainLayout.addView(glView, new LayoutParams(width, height));
+        Log.i(TAG, "onResume(): Views added to main layout.");
 
         Log.i(TAG, "onResume(): Views added to main layout.");
         if (glView != null) glView.onResume();
