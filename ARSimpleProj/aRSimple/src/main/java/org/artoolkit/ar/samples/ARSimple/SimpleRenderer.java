@@ -62,6 +62,7 @@ public class SimpleRenderer extends ARRenderer {
 
     private int markerID = -1;
     private Cube cube = new Cube(40.0f, 0.0f, 0.0f, 20.0f);
+    private float gDisplayOrientation = 2.0f; //Portrait
 
     /**
      * Markers can be configured here.
@@ -69,7 +70,7 @@ public class SimpleRenderer extends ARRenderer {
     @Override
     public boolean configureARScene() {
 
-        markerID = ARToolKit.getInstance().addMarker("nft;Data/pinball");
+        markerID = ARToolKit.getInstance().addMarker("single;Data/hiro.patt;80");
         if (markerID < 0) return false;
 
         return true;
@@ -85,7 +86,11 @@ public class SimpleRenderer extends ARRenderer {
 
         // Apply the ARToolKit projection matrix
         gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
+
+        //Rotate it by 90 degrees
+        gl.glLoadIdentity();
+        gl.glRotatef(90.0f, 0.0f, 0.0f, -1.0f);
+        gl.glMultMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
 
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
