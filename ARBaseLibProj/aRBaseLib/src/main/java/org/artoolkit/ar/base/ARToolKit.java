@@ -325,6 +325,36 @@ public class ARToolKit {
     }
 
     /**
+     * Retrieves the corner points for the specified marker
+     *
+     * @param markerUID The unique identifier (UID) of the marker to check
+     * @return A float array of size 8 containing the corner points starting at top left (x,y) top right, bottom right, bottom left.
+     *
+     */
+    public float[] queryMarkerCornerPoints(int markerUID) {
+        if (!initedNative) return null;
+        return NativeInterface.arwQueryMarkerCornerPoints(markerUID);
+    }
+
+    /**
+     * Retrieves the nomber of pattern for the specified marker
+     *
+     * @param markerUID The unique identifier (UID) of the marker to check
+     * @return Number of pattern
+     *
+     */
+    public int getMarkerPatternCount(int markerUID) {
+        if (!initedNative) return 0;
+        return NativeInterface.arwGetMarkerPatternCount(markerUID);
+    }
+
+
+    public boolean getMarkerPatternConfig(int markerUID,int patternID, float[] matrix, float[] width, float[] height, int[] imageSizeX, int[] imageSizeY) {
+        if (!initedNative) return false;
+        return NativeInterface.arwGetMarkerPatternConfig(markerUID,patternID,matrix,width,height,imageSizeX,imageSizeY);
+    }
+
+    /**
      * Returns true when video and marker detection are running.
      *
      * @return true when video and marker detection are running, otherwise false
