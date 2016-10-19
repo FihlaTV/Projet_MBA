@@ -48,7 +48,9 @@ import android.util.Log;
  * should be made only from within this class so that adequate error checking
  * and correct type conversion can take place.
  */
+
 public class ARToolKit {
+
 
     /**
      * Android logging tag for this class.
@@ -478,5 +480,44 @@ public class ARToolKit {
             return positionVector;
         }
         return null;
+    }
+
+    /**
+     * Set the marker options.
+     *
+     * @param markerUID The unique identifier (UID) of the marker to query.
+     * @param option One of the option available in NativeInterface.ARW_MARKER_OPTION*
+     * @param value Your float value
+     *
+     */
+    public void setMarkerOptionFloat(int markerUID, int option, float value ) {
+        if (!initedNative) return;
+        NativeInterface.arwSetMarkerOptionFloat(markerUID,option,value);
+    }
+
+    /**
+     * Set the marker options.
+     *
+     * @param markerUID The unique identifier (UID) of the marker to query.
+     * @param option One of the option available in NativeInterface.ARW_MARKER_OPTION*
+     * @param value Your int value
+     *
+     */
+    public void setMarkerOptionInt(int markerUID, int option, int value ) {
+        if (!initedNative) return;
+        NativeInterface.arwSetMarkerOptionInt(markerUID,option,value);
+    }
+
+    /**
+     * Set the marker options.
+     *
+     * @param markerUID The unique identifier (UID) of the marker to query.
+     * @param option One of the option available in NativeInterface.ARW_MARKER_OPTION*
+     * @param value Your boolean value
+     *
+     */
+    public void setMarkerOptionBool(int markerUID, int option, boolean value ) {
+        if (!initedNative) return;
+        NativeInterface.arwSetMarkerOptionBool(markerUID,option,value);
     }
 }

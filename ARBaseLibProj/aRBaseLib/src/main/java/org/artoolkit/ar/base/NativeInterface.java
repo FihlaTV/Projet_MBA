@@ -332,12 +332,16 @@ public class NativeInterface {
      */
     public static native boolean arwQueryMarkerTransformationStereo(int markerUID, float[] matrixL, float[] matrixR);
 
-    public static final int ARW_MARKER_OPTION_FILTERED = 1,
-    						ARW_MARKER_OPTION_FILTER_SAMPLE_RATE = 2,
-    						ARW_MARKER_OPTION_FILTER_CUTOFF_FREQ = 3,
-    						ARW_MARKER_OPTION_SQUARE_USE_CONT_POSE_ESTIMATION = 4,
-    						ARW_MARKER_OPTION_SQUARE_CONFIDENCE = 5,
-    						ARW_MARKER_OPTION_SQUARE_CONFIDENCE_CUTOFF = 6;
+    public static final int ARW_MARKER_OPTION_FILTERED = 1,                         ///< bool, true for filtering enabled.
+                            ARW_MARKER_OPTION_FILTER_SAMPLE_RATE = 2,               ///< float, sample rate for filter calculations.
+                            ARW_MARKER_OPTION_FILTER_CUTOFF_FREQ = 3,               ///< float, cutoff frequency of filter.
+                            ARW_MARKER_OPTION_SQUARE_USE_CONT_POSE_ESTIMATION = 4,  ///< bool, true to use continuous pose estimate.
+                            ARW_MARKER_OPTION_SQUARE_CONFIDENCE = 5,                ///< float, confidence value of most recent marker match
+                            ARW_MARKER_OPTION_SQUARE_CONFIDENCE_CUTOFF = 6,         ///< float, minimum allowable confidence value used in marker matching.
+                            ARW_MARKER_OPTION_NFT_SCALE = 7,                        ///< float, scale factor applied to NFT marker size.
+                            ARW_MARKER_OPTION_MULTI_MIN_SUBMARKERS = 8,             ///< int, minimum number of submarkers for tracking to be valid.
+                            ARW_MARKER_OPTION_MULTI_MIN_CONF_MATRIX = 9,            ///< float, minimum confidence value for submarker matrix tracking to be valid.
+                            ARW_MARKER_OPTION_MULTI_MIN_CONF_PATTERN = 10;          ///< float, minimum confidence value for submarker pattern tracking to be valid.
 
     public static native void arwSetMarkerOptionBool(int markerUID, int option, boolean value);
 
