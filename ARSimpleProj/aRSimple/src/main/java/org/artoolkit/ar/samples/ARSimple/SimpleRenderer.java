@@ -49,6 +49,12 @@
 
 package org.artoolkit.ar.samples.ARSimple;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLES10;
+import android.opengl.GLUtils;
 import android.util.Log;
 
 import org.artoolkit.ar.base.ARToolKit;
@@ -57,17 +63,26 @@ import org.artoolkit.ar.base.rendering.ARRenderer;
 import org.artoolkit.ar.base.rendering.Cube;
 import org.artoolkit.ar.base.rendering.Line;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
  * A very simple Renderer that adds a marker and draws a cube on it.
  */
+
+
 public class SimpleRenderer extends ARRenderer {
 
     private int markerID = -1;
     private int markerID2 = -1;
     private Cube cube = new Cube(40.0f, 0.0f, 0.0f, 20.0f);
     private Cube cube2 = new Cube(1.0f, 0.0f, 0.0f, 0.5f);
+    private CubeTex cubeTex = new CubeTex();
+    private int tex;
+    private Context context;
     /**
      * Markers can be configured here.
      */
@@ -76,11 +91,17 @@ public class SimpleRenderer extends ARRenderer {
 
         markerID = ARToolKit.getInstance().addMarker("nft;Data/pinball");
         markerID2 = ARToolKit.getInstance().addMarker("nft;Data/003-022");
-        ARToolKit.getInstance().setMarkerOptionFloat(markerID2, NativeInterface.ARW_MARKER_OPTION_FILTER_CUTOFF_FREQ,30); // ?? Is this working ??
-        ARToolKit.getInstance().setMarkerOptionFloat(markerID, NativeInterface.ARW_MARKER_OPTION_FILTER_CUTOFF_FREQ,30); // ?? Is this working ??
         if (markerID < 0) return false;
 
         return true;
+    }
+    public SimpleRenderer(Context cont) {
+        context = cont;
+    }
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        super.onSurfaceCreated(gl,config);
+        cubeTex.loadGLTexture(gl,context);
     }
 
     /**
@@ -111,7 +132,6 @@ public class SimpleRenderer extends ARRenderer {
 
             int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID);
 
-
             if(pattID!=0) {
                 float[] matrix = new float[16];
                 float[] height = new float[1];
@@ -119,19 +139,10 @@ public class SimpleRenderer extends ARRenderer {
                 int[] imsX = new int[1];
                 int[] imsY = new int[1];
                 ARToolKit.getInstance().getMarkerPatternConfig(markerID,pattID-1,matrix,width,height,imsX,imsY);
-                Log.d("Pattern","width = " + width[0] + "\n" +
-                        "height = " + height[0] + "\n" +
-                        "imsX =" + imsX[0] + "\n" +
-                        "imsY =" + imsY[0] + "\n");
-
-                for (int i = 0; i < 16;i++) {
-                    Log.d("Matrix","mat[" + i +"] = " + matrix[i]);
-                }
                 gl.glTranslatef(width[0]/2.0f,height[0]/2.0f,0.0f);
-                gl.glScalef(width[0]*0.90f,height[0]*0.90f,1.0f);
-
+                gl.glScalef(width[0]/2.0f,height[0]/2.0f,1.0f);
             }
-            cube2.draw(gl);
+            cubeTex.draw(gl);
         }
         if (ARToolKit.getInstance().queryMarkerVisible(markerID2)) {
 
@@ -147,18 +158,11 @@ public class SimpleRenderer extends ARRenderer {
                 int[] imsX = new int[1];
                 int[] imsY = new int[1];
                 ARToolKit.getInstance().getMarkerPatternConfig(markerID2,pattID-1,matrix,width,height,imsX,imsY);
-                Log.d("Pattern","width = " + width[0] + "\n" +
-                                    "height = " + height[0] + "\n" +
-                                    "imsX =" + imsX[0] + "\n" +
-                                    "imsY =" + imsY[0] + "\n");
-
-                for (int i = 0; i < 16;i++) {
-                    Log.d("Matrix","mat[" + i +"] = " + matrix[i]);
-                }
                 gl.glTranslatef(width[0]/2.0f,height[0]/2.0f,1);
                 gl.glScalef(width[0],height[0],1);
 
             }
+
             cube2.draw(gl);
         }
 

@@ -70,7 +70,7 @@ public class ARSimpleActivity extends ARActivity {
      */
     @Override
     protected ARRenderer supplyRenderer() {
-        return new SimpleRenderer();
+        return new SimpleRenderer(this.getBaseContext());
     }
 
     /**
