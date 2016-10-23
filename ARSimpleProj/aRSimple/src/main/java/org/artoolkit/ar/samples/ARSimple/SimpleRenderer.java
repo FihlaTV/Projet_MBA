@@ -62,6 +62,9 @@ import org.artoolkit.ar.base.NativeInterface;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 import org.artoolkit.ar.base.rendering.Cube;
 import org.artoolkit.ar.base.rendering.Line;
+import org.artoolkit.ar.samples.ARSimple.Config.ConfigHolder;
+import org.artoolkit.ar.samples.ARSimple.Config.Model;
+import org.artoolkit.ar.samples.ARSimple.Config.Tableau;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,18 +88,34 @@ public class SimpleRenderer extends ARRenderer {
     private RectTex rectTex;
     private int tex;
     private Context context;
-    private Line lineX;
-    private Line lineY;
-    private Line lineZ;
     /**
      * Markers can be configured here.
      */
     @Override
     public boolean configureARScene() {
 
-        markerID = ARToolKit.getInstance().addMarker("nft;Data/pinball");
-        markerID2 = ARToolKit.getInstance().addMarker("nft;Data/003-022");
-        if (markerID < 0) return false;
+//        markerID = ARToolKit.getInstance().addMarker("nft;Data/pinball");
+//        markerID2 = ARToolKit.getInstance().addMarker("nft;Data/003-022");
+        Tableau t = new Tableau("Pinball","Data/pinball");
+        float[][] tab = {
+                {0,100,0},
+                {100,100,0},
+                {100,0,0},
+                {0,0,0},
+        };
+        ArrayList<String> tmp = new ArrayList<String>();
+        tmp.add("Data/tex_pinball.png");
+        t.addModel(new Model("Sur tableau",tab,tmp,context));
+        float[][] tab2 = {
+                {-100,100,0},
+                {0,100,0},
+                {0,0,0},
+                {-100,0,0},
+        };
+        t.addModel(new Model("Cote tableau",tab2,tmp,context));
+        ArrayList<Tableau> tableaux = new ArrayList<Tableau>();
+        tableaux.add(t);
+        ConfigHolder.getInstance().init(tableaux);
 
         return true;
     }
@@ -130,66 +149,70 @@ public class SimpleRenderer extends ARRenderer {
         gl.glEnable(GL10.GL_DEPTH_TEST);
         gl.glFrontFace(GL10.GL_CW);
 
-        // If the marker is visible, apply its transformation, and draw a cube
-        if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-
-            int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID);
-
-            if(pattID!=0 && rectTex == null ){
-                float[] matrix = new float[16];
-                float[] height = new float[1];
-                float[] width = new float[1];
-                int[] imsX = new int[1];
-                int[] imsY = new int[1];
-                ARToolKit.getInstance().getMarkerPatternConfig(markerID,pattID-1,matrix,width,height,imsX,imsY);
-                float[][] array = new float[4][3];
-                array[0][0] = 0.0f;
-                array[0][1] = height[0];
-                array[0][2] = 1.0f;
-
-                array[1][0] = width[0];
-                array[1][1] = height[0];
-                array[1][2] = 1.0f;
-
-                array[2][0] = width[0];
-                array[2][1] = 0.0f;
-                array[2][2] = 1.0f;
-
-                array[3][0] = 0.0f;
-                array[3][1] = 0.0f;
-                array[3][2] = 1.0f;
-                ArrayList<String> list = new ArrayList<String>();
-                list.add("Data/tex_pinball.png");
-                rectTex = new RectTex(array,list);
-            }
-            if(rectTex != null){
-                rectTex.draw(gl,context);
-            }
-
-        }
-        if (ARToolKit.getInstance().queryMarkerVisible(markerID2)) {
-
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID2), 0);
-            int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID2);
+        ConfigHolder.getInstance().draw(gl);
 
 
-            if(pattID!=0) {
-                float[] matrix = new float[16];
-                float[] height = new float[1];
-                float[] width = new float[1];
-                int[] imsX = new int[1];
-                int[] imsY = new int[1];
-                ARToolKit.getInstance().getMarkerPatternConfig(markerID2,pattID-1,matrix,width,height,imsX,imsY);
-                gl.glTranslatef(width[0]/2.0f,height[0]/2.0f,1);
-                gl.glScalef(width[0],height[0],1);
-
-            }
-
-            cubeTex.draw(gl);
-        }
+//        // If the marker is visible, apply its transformation, and draw a cube
+//        if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
+//            gl.glMatrixMode(GL10.GL_MODELVIEW);
+//            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
+//
+//            int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID);
+//
+//            if(pattID!=0 && rectTex == null ){
+//                float[] matrix = new float[16];
+//                float[] height = new float[1];
+//                float[] width = new float[1];
+//                int[] imsX = new int[1];
+//                int[] imsY = new int[1];
+//                ARToolKit.getInstance().getMarkerPatternConfig(markerID,pattID-1,matrix,width,height,imsX,imsY);
+//                Log.d("SimpleRenderer","x:" + imsX[0] + " y:" + imsY[0]);
+//                float[][] array = new float[4][3];
+//                array[0][0] = 0.0f;
+//                array[0][1] = height[0];
+//                array[0][2] = 1.0f;
+//
+//                array[1][0] = width[0];
+//                array[1][1] = height[0];
+//                array[1][2] = 1.0f;
+//
+//                array[2][0] = width[0];
+//                array[2][1] = 0.0f;
+//                array[2][2] = 1.0f;
+//
+//                array[3][0] = 0.0f;
+//                array[3][1] = 0.0f;
+//                array[3][2] = 1.0f;
+//                ArrayList<String> list = new ArrayList<String>();
+//                list.add("Data/tex_pinball.png");
+//                rectTex = new RectTex(array,list);
+//            }
+//            if(rectTex != null){
+//                rectTex.draw(gl,context);
+//            }
+//
+//        }
+//        if (ARToolKit.getInstance().queryMarkerVisible(markerID2)) {
+//
+//            gl.glMatrixMode(GL10.GL_MODELVIEW);
+//            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID2), 0);
+//            int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID2);
+//
+//
+//            if(pattID!=0) {
+//                float[] matrix = new float[16];
+//                float[] height = new float[1];
+//                float[] width = new float[1];
+//                int[] imsX = new int[1];
+//                int[] imsY = new int[1];
+//                ARToolKit.getInstance().getMarkerPatternConfig(markerID2,pattID-1,matrix,width,height,imsX,imsY);
+//                gl.glTranslatef(width[0]/2.0f,height[0]/2.0f,1);
+//                gl.glScalef(width[0],height[0],1);
+//
+//            }
+//
+//            cubeTex.draw(gl);
+//        }
 
     }
 }

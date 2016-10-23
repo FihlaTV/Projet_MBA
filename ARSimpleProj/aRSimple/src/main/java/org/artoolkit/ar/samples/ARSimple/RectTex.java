@@ -65,7 +65,9 @@ public class RectTex {
             vertices[(i*3)] = pos[i][0];
             vertices[(i*3)+1] = pos[i][1];
             vertices[(i*3)+2] = pos[i][2];
+            Log.d("RectText","" + vertices[(i*3)] + "," + vertices[(i*3)+1] + "," + vertices[(i*3)+2]);
         }
+
         mVertexBuffer = RenderUtils.buildFloatBuffer(vertices);
         mIndexBuffer = RenderUtils.buildShortBuffer(indices);
         mTexBuffer = RenderUtils.buildFloatBuffer(texCoords);
