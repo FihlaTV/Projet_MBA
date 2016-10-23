@@ -74,6 +74,17 @@ public class Line {
         this.width = width;
         setArrays();
     }
+    public Line(float[] start, float[] end, float width,float[] color) {
+        setStart(start);
+        setEnd(end);
+        this.color[0] = color[0];
+        this.color[1] = color[1];
+        this.color[2] = color[2];
+        this.color[3] = color[3];
+
+        this.width = width;
+        setArrays();
+    }
 
     protected void setArrays() {
 
@@ -92,7 +103,7 @@ public class Line {
         gl.glVertexPointer(vertexLength, GLES10.GL_FLOAT, 0, mVertexBuffer);
 
         gl.glEnableClientState(GLES10.GL_VERTEX_ARRAY);
-        gl.glColor4f(1, 0, 0, 1); // Red
+        gl.glColor4f(color[0],color[1],color[2],color[3]);
         gl.glLineWidth(this.width);
         gl.glDrawArrays(GLES10.GL_LINES, 0, 2);
         gl.glDisableClientState(GLES10.GL_VERTEX_ARRAY);
