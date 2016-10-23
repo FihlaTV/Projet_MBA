@@ -29,7 +29,6 @@ public class RectTex {
 
     private FloatBuffer mVertexBuffer;
     private FloatBuffer mTexBuffer;
-    private FloatBuffer mColorBuffer;
     private ShortBuffer mIndexBuffer;
     private boolean finished;
     private int[] textures;
@@ -37,17 +36,6 @@ public class RectTex {
     private short[] indices = {0,1,2,2,3,0};        //      0***1
                                                     //      *   *
                                                     //      3***2
-                                                    float c = 1.0f;
-    float colors[] = {
-            0, 0, 0, c, // 0 black
-            c, 0, 0, c, // 1 red
-            c, c, 0, c, // 2 yellow
-            0, c, 0, c, // 3 green
-            0, 0, c, c, // 4 blue
-            c, 0, c, c, // 5 magenta
-            c, c, c, c, // 6 white
-            0, c, c, c, // 7 cyan
-    };
 
     private float[] texCoords = {
             0,0, //Reverse axis Top left
@@ -77,12 +65,10 @@ public class RectTex {
             vertices[(i*3)] = pos[i][0];
             vertices[(i*3)+1] = pos[i][1];
             vertices[(i*3)+2] = pos[i][2];
-            Log.d("RectText","Vertice " + i + ": " + pos[i][0] + "," + pos[i][1] + "," + pos[i][2]);
         }
         mVertexBuffer = RenderUtils.buildFloatBuffer(vertices);
         mIndexBuffer = RenderUtils.buildShortBuffer(indices);
         mTexBuffer = RenderUtils.buildFloatBuffer(texCoords);
-        mColorBuffer = RenderUtils.buildFloatBuffer(colors);
     }
 
     /**
