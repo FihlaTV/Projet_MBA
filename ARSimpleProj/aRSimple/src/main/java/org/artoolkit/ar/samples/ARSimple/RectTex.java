@@ -4,13 +4,20 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES10;
 import android.opengl.GLUtils;
+import android.util.Log;
+
+import org.artoolkit.ar.base.rendering.RenderUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -20,140 +27,62 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class RectTex {
 
-    /**
-     * The buffer holding the vertices
-     */
-    private FloatBuffer vertexBuffer;
-    /**
-     * The buffer holding the texture coordinates
-     */
-    private FloatBuffer textureBuffer;
-    /**
-     * The buffer holding the indices
-     */
-    private ByteBuffer indexBuffer;
-
-    /**
-     * Our texture pointer
-     */
-    private int[] textures = new int[6];
-
-
-    /**
-     * The initial vertex definition
-     * <p>
-     * Note that each face is defined, even
-     * if indices are available, because
-     * of the texturing we want to achieve
-     */
-    private float vertices[] = {
-            //Vertices according to faces
-            -1.0f, -1.0f, 1.0f, //Vertex 0
-            1.0f, -1.0f, 1.0f,  //v1
-            -1.0f, 1.0f, 1.0f,  //v2
-            1.0f, 1.0f, 1.0f,   //v3
-
-            1.0f, -1.0f, 1.0f,  //...
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, -1.0f,
-
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, 1.0f,
-
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-
-            -1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
+    private FloatBuffer mVertexBuffer;
+    private FloatBuffer mTexBuffer;
+    private FloatBuffer mColorBuffer;
+    private ShortBuffer mIndexBuffer;
+    private boolean finished;
+    private int[] textures;
+    private ArrayList<String> pathToTextures;
+    private short[] indices = {0,1,2,2,3,0};        //      0***1
+                                                    //      *   *
+                                                    //      3***2
+                                                    float c = 1.0f;
+    float colors[] = {
+            0, 0, 0, c, // 0 black
+            c, 0, 0, c, // 1 red
+            c, c, 0, c, // 2 yellow
+            0, c, 0, c, // 3 green
+            0, 0, c, c, // 4 blue
+            c, 0, c, c, // 5 magenta
+            c, c, c, c, // 6 white
+            0, c, c, c, // 7 cyan
     };
 
-    /**
-     * The initial texture coordinates (u, v)
-     */
-    private float texture[] = {
-            //Mapping coordinates for the vertices
+    private float[] texCoords = {
+            0,0, //Reverse axis Top left
+            1,0, //Top right
+            1,1, //Bottom right
+            0,1};//Bottom left
 
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
+    public RectTex(float pos[][],ArrayList<String> pathToTextures) {
+        setArrays(pos);
+        this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
+    }
 
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
+    public FloatBuffer getmVertexBuffer() {
+        return mVertexBuffer;
+    }
 
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
+    public ShortBuffer getmIndexBuffer() {
+        return mIndexBuffer;
+    }
 
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
 
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
+    private void setArrays(float pos[][]) {
 
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
 
-    };
-
-    /**
-     * The initial indices definition
-     */
-    private byte indices[] = {
-            //Faces definition
-            0, 1, 3, 0, 3, 2,           //Face front
-            4, 5, 7, 4, 7, 6,           //Face right
-            8, 9, 11, 8, 11, 10,        //...
-            12, 13, 15, 12, 15, 14,
-            16, 17, 19, 16, 19, 18,
-            20, 21, 23, 20, 23, 22,
-    };
-
-    /**
-     * The Cube constructor.
-     * <p>
-     * Initiate the buffers.
-     */
-    public RectTex() {
-        //
-        ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
-        byteBuf.order(ByteOrder.nativeOrder());
-        vertexBuffer = byteBuf.asFloatBuffer();
-        vertexBuffer.put(vertices);
-        vertexBuffer.position(0);
-
-        //
-        byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
-        byteBuf.order(ByteOrder.nativeOrder());
-        textureBuffer = byteBuf.asFloatBuffer();
-        textureBuffer.put(texture);
-        textureBuffer.position(0);
-
-        //
-        indexBuffer = ByteBuffer.allocateDirect(indices.length);
-        indexBuffer.put(indices);
-        indexBuffer.position(0);
+        float vertices[] = new float[12];
+        for(int i = 0; i < 4;i++){
+            vertices[(i*3)] = pos[i][0];
+            vertices[(i*3)+1] = pos[i][1];
+            vertices[(i*3)+2] = pos[i][2];
+            Log.d("RectText","Vertice " + i + ": " + pos[i][0] + "," + pos[i][1] + "," + pos[i][2]);
+        }
+        mVertexBuffer = RenderUtils.buildFloatBuffer(vertices);
+        mIndexBuffer = RenderUtils.buildShortBuffer(indices);
+        mTexBuffer = RenderUtils.buildFloatBuffer(texCoords);
+        mColorBuffer = RenderUtils.buildFloatBuffer(colors);
     }
 
     /**
@@ -163,32 +92,30 @@ public class RectTex {
      *
      * @param gl - The GL Context
      */
-    public void draw(GL10 gl) {
 
-        //Point to our buffers
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+    private int rotat = 0;
+    public void draw(GL10 gl,Context context) {
+        if(finished == false) {
+            loadGLTexture(gl,context,pathToTextures);
+        } else {
+            gl.glEnable(GL10.GL_CULL_FACE);
+            gl.glFrontFace(GL10.GL_CW);
 
-        //Set the face rotation
-        gl.glFrontFace(GL10.GL_CCW);
+            gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+            gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
-        //Enable the vertex and texture state
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+            gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTexBuffer);
+            gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
 
-        for (int i = 0; i < 6; i++) {
-            //Bind our only previously generated texture in this case
             gl.glEnable(GL10.GL_TEXTURE_2D);
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
-            indexBuffer.position(6 * i);
-            //Draw the vertices as triangles, based on the Index Buffer information
-            gl.glDrawElements(GL10.GL_TRIANGLES, 6, GL10.GL_UNSIGNED_BYTE, indexBuffer);
+            gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+            gl.glDrawElements(GL10.GL_TRIANGLES, indices.length, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
             gl.glDisable(GL10.GL_TEXTURE_2D);
-        }
 
-        //Disable the client state before leaving
-        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+            gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+            gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+            gl.glDisable(GL10.GL_CULL_FACE);
+        }
     }
 
     /**
@@ -197,16 +124,17 @@ public class RectTex {
      * @param gl      - The GL Context
      * @param context - The Activity context
      */
-    public void loadGLTexture(GL10 gl, Context context) {
+    public void loadGLTexture(GL10 gl, Context context,ArrayList<String> pathToTextures) {
 
-        //Generate a 6 texture pointer...
-        gl.glGenTextures(6, textures, 0);
+        //Generate a number of texture, texture pointer...
+        textures = new int[pathToTextures.size()];
+        gl.glGenTextures(pathToTextures.size(), textures, 0);
 
         Bitmap bitmap = null;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < pathToTextures.size(); i++) {
             // Create a bitmap
-            bitmap = getBitmapFromAsset(context, "Data/003-022.png");
+            bitmap = getBitmapFromAsset(context, pathToTextures.get(i));
 
             //...and bind it to our array
             gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
@@ -225,6 +153,7 @@ public class RectTex {
             //Clean up
             bitmap = null;
         }
+        finished = true;
     }
 
     public static Bitmap getBitmapFromAsset(Context context, String filePath) {

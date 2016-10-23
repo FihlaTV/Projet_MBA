@@ -65,6 +65,7 @@ import org.artoolkit.ar.base.rendering.Line;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -81,8 +82,12 @@ public class SimpleRenderer extends ARRenderer {
     private Cube cube = new Cube(40.0f, 0.0f, 0.0f, 20.0f);
     private Cube cube2 = new Cube(1.0f, 0.0f, 0.0f, 0.5f);
     private CubeTex cubeTex = new CubeTex();
+    private RectTex rectTex;
     private int tex;
     private Context context;
+    private Line lineX;
+    private Line lineY;
+    private Line lineZ;
     /**
      * Markers can be configured here.
      */
@@ -132,17 +137,37 @@ public class SimpleRenderer extends ARRenderer {
 
             int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID);
 
-            if(pattID!=0) {
+            if(pattID!=0 && rectTex == null ){
                 float[] matrix = new float[16];
                 float[] height = new float[1];
                 float[] width = new float[1];
                 int[] imsX = new int[1];
                 int[] imsY = new int[1];
                 ARToolKit.getInstance().getMarkerPatternConfig(markerID,pattID-1,matrix,width,height,imsX,imsY);
-                gl.glTranslatef(width[0]/2.0f,height[0]/2.0f,0.0f);
-                gl.glScalef(width[0]/2.0f,height[0]/2.0f,1.0f);
+                float[][] array = new float[4][3];
+                array[0][0] = 0.0f;
+                array[0][1] = height[0];
+                array[0][2] = 1.0f;
+
+                array[1][0] = width[0];
+                array[1][1] = height[0];
+                array[1][2] = 1.0f;
+
+                array[2][0] = width[0];
+                array[2][1] = 0.0f;
+                array[2][2] = 1.0f;
+
+                array[3][0] = 0.0f;
+                array[3][1] = 0.0f;
+                array[3][2] = 1.0f;
+                ArrayList<String> list = new ArrayList<String>();
+                list.add("Data/tex_pinball.png");
+                rectTex = new RectTex(array,list);
             }
-            cubeTex.draw(gl);
+            if(rectTex != null){
+                rectTex.draw(gl,context);
+            }
+
         }
         if (ARToolKit.getInstance().queryMarkerVisible(markerID2)) {
 
@@ -163,7 +188,7 @@ public class SimpleRenderer extends ARRenderer {
 
             }
 
-            cube2.draw(gl);
+            cubeTex.draw(gl);
         }
 
     }

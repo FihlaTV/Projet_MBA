@@ -206,7 +206,7 @@ public class CubeTex {
 
         for (int i = 0; i < 6; i++) {
             // Create a bitmap
-            bitmap = getBitmapFromAsset(context, "Data/tex_pinball.png");
+            bitmap = getBitmapFromAsset(context, "Data/003-022.png");
 
             //...and bind it to our array
             gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
