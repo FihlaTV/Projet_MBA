@@ -22,6 +22,18 @@ public class Model {
     private RectTex rect;
     private Context context;
     //TODO: Constructor take context ?
+
+    /**
+     *
+     * @param name Name of your model, only use to debug
+     * @param pos Array of 3D position, the four point of your rectangle
+     *            pos[0] = Top Left corner
+     *            pos[1] = Top Right corner
+     *            pos[2] = Bottom Right corner
+     *            pos[3] = Bottom Left corner
+     * @param pathToTextures An ArrayList<String> containing paths to your texture
+     * @param context Context activity to load from assets folder
+     */
     public Model(String name, float pos[][], ArrayList<String> pathToTextures,Context context){
         this.name = name;
         for(int i = 0; i < 4;i++){
@@ -34,6 +46,10 @@ public class Model {
         this.context = context;
     }
 
+    /**
+     *
+     * @param gl GL10 Context
+     */
     public void draw(GL10 gl){
         rect.draw(gl,context);
     }

@@ -43,6 +43,16 @@ public class RectTex {
             1,1, //Bottom right
             0,1};//Bottom left
 
+    /**
+     *
+     * @param pos Array of 3D position, the four point of your rectangle
+     *            pos[0] = Top Left corner
+     *            pos[1] = Top Right corner
+     *            pos[2] = Bottom Right corner
+     *            pos[3] = Bottom Left corner
+     * @param pathToTextures An ArrayList<String> containing paths to your texture
+     *
+     */
     public RectTex(float pos[][],ArrayList<String> pathToTextures) {
         setArrays(pos);
         this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
@@ -80,9 +90,8 @@ public class RectTex {
      *
      * @param gl - The GL Context
      */
-
-    private int rotat = 0;
     public void draw(GL10 gl,Context context) {
+        //Load texture only draw, expecting not all model will be view, it will increase performance I think
         if(finished == false) {
             loadGLTexture(gl,context,pathToTextures);
         } else {
@@ -144,6 +153,12 @@ public class RectTex {
         finished = true;
     }
 
+    /**
+     * Return bitmap from file
+     * @param context
+     * @param filePath
+     * @return Bitmap type
+     */
     public static Bitmap getBitmapFromAsset(Context context, String filePath) {
         AssetManager assetManager = context.getAssets();
 

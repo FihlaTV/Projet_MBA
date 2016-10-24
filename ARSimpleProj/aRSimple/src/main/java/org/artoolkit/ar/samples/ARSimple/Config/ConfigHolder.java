@@ -11,10 +11,10 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 public class ConfigHolder {
-    private static ArrayList<Tableau> targets;
+    private static ArrayList<Canvas> targets;
     private static ConfigHolder instance = null;
-    public void init(ArrayList<Tableau> targets){
-        this.targets = (ArrayList<Tableau>) targets.clone();
+    public void init(ArrayList<Canvas> targets){
+        this.targets = (ArrayList<Canvas>) targets.clone();
     }
 
     public static ConfigHolder getInstance(){
@@ -22,8 +22,12 @@ public class ConfigHolder {
         return instance;
     }
 
+    /**
+     * Draw all VISIBLE canvas
+     * @param gl
+     */
     public void draw(GL10 gl){
-        for(Tableau t : targets){
+        for(Canvas t : targets){
             if(ARToolKit.getInstance().queryMarkerVisible(t.getMarkerUID())) {
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(t.getMarkerUID()), 0);

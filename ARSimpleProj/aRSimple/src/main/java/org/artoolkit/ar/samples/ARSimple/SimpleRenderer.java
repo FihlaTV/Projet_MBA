@@ -50,24 +50,13 @@
 package org.artoolkit.ar.samples.ARSimple;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.opengl.GLES10;
-import android.opengl.GLUtils;
-import android.util.Log;
 
 import org.artoolkit.ar.base.ARToolKit;
-import org.artoolkit.ar.base.NativeInterface;
 import org.artoolkit.ar.base.rendering.ARRenderer;
-import org.artoolkit.ar.base.rendering.Cube;
-import org.artoolkit.ar.base.rendering.Line;
 import org.artoolkit.ar.samples.ARSimple.Config.ConfigHolder;
 import org.artoolkit.ar.samples.ARSimple.Config.Model;
-import org.artoolkit.ar.samples.ARSimple.Config.Tableau;
+import org.artoolkit.ar.samples.ARSimple.Config.Canvas;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -80,23 +69,14 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class SimpleRenderer extends ARRenderer {
 
-    private int markerID = -1;
-    private int markerID2 = -1;
-    private Cube cube = new Cube(40.0f, 0.0f, 0.0f, 20.0f);
-    private Cube cube2 = new Cube(1.0f, 0.0f, 0.0f, 0.5f);
-    private CubeTex cubeTex = new CubeTex();
-    private RectTex rectTex;
-    private int tex;
     private Context context;
     /**
      * Markers can be configured here.
      */
     @Override
     public boolean configureARScene() {
-
-//        markerID = ARToolKit.getInstance().addMarker("nft;Data/pinball");
-//        markerID2 = ARToolKit.getInstance().addMarker("nft;Data/003-022");
-        Tableau t = new Tableau("Pinball","Data/pinball");
+        //Construction init, this will be done by a JSON Parser
+        Canvas t = new Canvas("Pinball","Data/pinball");
         float[][] tab = {
                 {0,100,0},
                 {100,100,0},
@@ -113,7 +93,7 @@ public class SimpleRenderer extends ARRenderer {
                 {-100,0,0},
         };
         t.addModel(new Model("Cote tableau",tab2,tmp,context));
-        ArrayList<Tableau> tableaux = new ArrayList<Tableau>();
+        ArrayList<Canvas> tableaux = new ArrayList<Canvas>();
         tableaux.add(t);
         ConfigHolder.getInstance().init(tableaux);
 
@@ -125,7 +105,6 @@ public class SimpleRenderer extends ARRenderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         super.onSurfaceCreated(gl,config);
-        cubeTex.loadGLTexture(gl,context);
     }
 
     /**
