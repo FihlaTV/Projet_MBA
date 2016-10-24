@@ -56,6 +56,7 @@ import org.artoolkit.ar.base.rendering.ARRenderer;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 import fr.norips.ar.ARMuseum.Config.Model;
 import fr.norips.ar.ARMuseum.Config.Canvas;
+import fr.norips.ar.ARMuseum.Model.RectMovie;
 
 import java.util.ArrayList;
 
@@ -92,7 +93,9 @@ public class SimpleRenderer extends ARRenderer {
                 {0,0,0},
                 {-100,0,0},
         };
-        t.addModel(new Model("Cote tableau",tab2,tmp,context));
+        tmp.clear();
+        tmp.add("Data/movie.mp4");
+        t.addModel(new Model("Cote tableau",new RectMovie(tab2,tmp,context)));
         ArrayList<Canvas> tableaux = new ArrayList<Canvas>();
         tableaux.add(t);
         ConfigHolder.getInstance().init(tableaux);

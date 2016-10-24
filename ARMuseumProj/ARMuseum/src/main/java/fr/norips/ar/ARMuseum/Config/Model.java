@@ -43,6 +43,17 @@ public class Model {
         rect = new RectTex(pos,pathToTextures,context);
     }
 
+    public Model(String name, Rectangle rect){
+        this.name = name;
+        for(int i = 0; i < 4;i++){
+            this.pos[i][0] = pos[i][0];
+            this.pos[i][1] = pos[i][1];
+            this.pos[i][2] = pos[i][2];
+        }
+        //TODO: Load texture on detection or on startup ?
+        this.rect = rect;
+    }
+
     /**
      *
      * @param gl GL10 Context
