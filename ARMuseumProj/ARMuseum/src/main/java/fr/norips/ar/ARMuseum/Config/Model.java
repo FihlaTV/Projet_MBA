@@ -1,10 +1,10 @@
-package org.artoolkit.ar.samples.ARSimple.Config;
+package fr.norips.ar.ARMuseum.Config;
 
 
 import android.content.Context;
 
-import org.artoolkit.ar.samples.ARSimple.Model.RectTex;
-import org.artoolkit.ar.samples.ARSimple.Model.Rectangle;
+import fr.norips.ar.ARMuseum.Model.RectTex;
+import fr.norips.ar.ARMuseum.Model.Rectangle;
 
 import java.util.ArrayList;
 

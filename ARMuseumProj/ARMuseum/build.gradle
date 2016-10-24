@@ -6,7 +6,7 @@ model {
         buildToolsVersion = "23.0.3"
 
         defaultConfig.with {
-            applicationId = "org.artoolkit.ar.samples.ARSimple"
+            applicationId = "fr.norips.ARMuseum"
             minSdkVersion.apiLevel = 15
             targetSdkVersion.apiLevel = 23
             versionCode = 1

@@ -47,15 +47,15 @@
  *
  */
 
-package org.artoolkit.ar.samples.ARSimple;
+package fr.norips.ar.ARMuseum;
 
 import android.content.Context;
 
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.ARRenderer;
-import org.artoolkit.ar.samples.ARSimple.Config.ConfigHolder;
-import org.artoolkit.ar.samples.ARSimple.Config.Model;
-import org.artoolkit.ar.samples.ARSimple.Config.Canvas;
+import fr.norips.ar.ARMuseum.Config.ConfigHolder;
+import fr.norips.ar.ARMuseum.Config.Model;
+import fr.norips.ar.ARMuseum.Config.Canvas;
 
 import java.util.ArrayList;
 

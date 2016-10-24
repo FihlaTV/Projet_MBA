@@ -1,4 +1,4 @@
-package org.artoolkit.ar.samples.ARSimple.Model;
+package fr.norips.ar.ARMuseum.Model;
 
 /**
  * Created by norips on 24/10/16.

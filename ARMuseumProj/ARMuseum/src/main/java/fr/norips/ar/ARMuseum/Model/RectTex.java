@@ -1,22 +1,13 @@
-package org.artoolkit.ar.samples.ARSimple.Model;
+package fr.norips.ar.ARMuseum.Model;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES10;
 import android.opengl.GLUtils;
-import android.util.Log;
-
-import org.artoolkit.ar.base.rendering.RenderUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;

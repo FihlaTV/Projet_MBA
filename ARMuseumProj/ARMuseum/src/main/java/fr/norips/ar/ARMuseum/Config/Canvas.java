@@ -1,4 +1,4 @@
-package org.artoolkit.ar.samples.ARSimple.Config;
+package fr.norips.ar.ARMuseum.Config;
 
 import org.artoolkit.ar.base.ARToolKit;
 

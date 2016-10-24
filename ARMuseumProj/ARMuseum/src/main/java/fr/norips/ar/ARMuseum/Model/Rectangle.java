@@ -1,4 +1,4 @@
-package org.artoolkit.ar.samples.ARSimple.Model;
+package fr.norips.ar.ARMuseum.Model;
 
 import android.content.Context;
 import android.util.Log;
