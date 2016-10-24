@@ -53,6 +53,7 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.rendering.ARRenderer;
+import org.artoolkit.ar.samples.ARSimple.SimpleRenderer;
 
 /**
  * A very simple example of extending ARActivity to create a new AR application.

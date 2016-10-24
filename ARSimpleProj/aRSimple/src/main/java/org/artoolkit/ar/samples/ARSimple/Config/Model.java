@@ -3,7 +3,8 @@ package org.artoolkit.ar.samples.ARSimple.Config;
 
 import android.content.Context;
 
-import org.artoolkit.ar.samples.ARSimple.RectTex;
+import org.artoolkit.ar.samples.ARSimple.Model.RectTex;
+import org.artoolkit.ar.samples.ARSimple.Model.Rectangle;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,7 @@ public class Model {
     private float pos[][] = new float[4][3];
     private ArrayList<String> pathToTextures;
     private ArrayList<Integer> texture_id;
-    private RectTex rect;
-    private Context context;
-    //TODO: Constructor take context ?
+    private Rectangle rect;
 
     /**
      *
@@ -41,8 +40,7 @@ public class Model {
             this.pos[i][2] = pos[i][2];
         }
         //TODO: Load texture on detection or on startup ?
-        rect = new RectTex(this.pos,pathToTextures);
-        this.context = context;
+        rect = new RectTex(pos,pathToTextures,context);
     }
 
     /**
@@ -50,6 +48,6 @@ public class Model {
      * @param gl GL10 Context
      */
     public void draw(GL10 gl){
-        rect.draw(gl,context);
+        rect.draw(gl);
     }
 }

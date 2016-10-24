@@ -1,4 +1,4 @@
-package org.artoolkit.ar.samples.ARSimple;
+package org.artoolkit.ar.samples.ARSimple.Model;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -25,62 +25,13 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by norips on 20/10/16.
  */
 
-public class RectTex {
+public class RectTex extends Rectangle{
 
-    private FloatBuffer mVertexBuffer;
-    private FloatBuffer mTexBuffer;
-    private ShortBuffer mIndexBuffer;
     private boolean finished;
     private int[] textures;
-    private ArrayList<String> pathToTextures;
-    private short[] indices = {0,1,2,2,3,0};        //      0***1
-                                                    //      *   *
-                                                    //      3***2
 
-    private float[] texCoords = {
-            0,0, //Reverse axis Top left
-            1,0, //Top right
-            1,1, //Bottom right
-            0,1};//Bottom left
-
-    /**
-     *
-     * @param pos Array of 3D position, the four point of your rectangle
-     *            pos[0] = Top Left corner
-     *            pos[1] = Top Right corner
-     *            pos[2] = Bottom Right corner
-     *            pos[3] = Bottom Left corner
-     * @param pathToTextures An ArrayList<String> containing paths to your texture
-     *
-     */
-    public RectTex(float pos[][],ArrayList<String> pathToTextures) {
-        setArrays(pos);
-        this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
-    }
-
-    public FloatBuffer getmVertexBuffer() {
-        return mVertexBuffer;
-    }
-
-    public ShortBuffer getmIndexBuffer() {
-        return mIndexBuffer;
-    }
-
-
-    private void setArrays(float pos[][]) {
-
-
-        float vertices[] = new float[12];
-        for(int i = 0; i < 4;i++){
-            vertices[(i*3)] = pos[i][0];
-            vertices[(i*3)+1] = pos[i][1];
-            vertices[(i*3)+2] = pos[i][2];
-            Log.d("RectText","" + vertices[(i*3)] + "," + vertices[(i*3)+1] + "," + vertices[(i*3)+2]);
-        }
-
-        mVertexBuffer = RenderUtils.buildFloatBuffer(vertices);
-        mIndexBuffer = RenderUtils.buildShortBuffer(indices);
-        mTexBuffer = RenderUtils.buildFloatBuffer(texCoords);
+    public RectTex(float pos[][],ArrayList<String> pathToTextures,Context context) {
+        super(pos,pathToTextures,context);
     }
 
     /**
@@ -90,7 +41,7 @@ public class RectTex {
      *
      * @param gl - The GL Context
      */
-    public void draw(GL10 gl,Context context) {
+    public void draw(GL10 gl) {
         //Load texture only draw, expecting not all model will be view, it will increase performance I think
         if(finished == false) {
             loadGLTexture(gl,context,pathToTextures);
