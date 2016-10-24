@@ -3,7 +3,6 @@ package org.artoolkit.ar.samples.ARSimple.Config;
 
 import android.content.Context;
 
-import org.artoolkit.ar.samples.ARSimple.CubeTex;
 import org.artoolkit.ar.samples.ARSimple.RectTex;
 
 import java.util.ArrayList;
