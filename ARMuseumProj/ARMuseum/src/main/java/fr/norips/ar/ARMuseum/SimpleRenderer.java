@@ -50,15 +50,22 @@
 package fr.norips.ar.ARMuseum;
 
 import android.content.Context;
+import android.opengl.GLES20;
 
 import org.artoolkit.ar.base.ARToolKit;
-import org.artoolkit.ar.base.rendering.ARRenderer;
-import fr.norips.ar.ARMuseum.Config.ConfigHolder;
-import fr.norips.ar.ARMuseum.Config.Model;
-import fr.norips.ar.ARMuseum.Config.Canvas;
-import fr.norips.ar.ARMuseum.Model.RectMovie;
+import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
+import org.artoolkit.ar.base.rendering.gles20.CubeGLES20;
+import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.util.ArrayList;
+
+import fr.norips.ar.ARMuseum.Config.Canvas;
+import fr.norips.ar.ARMuseum.Config.ConfigHolder;
+import fr.norips.ar.ARMuseum.Config.Model;
+import fr.norips.ar.ARMuseum.Model.RectTex;
+import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
+import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
+import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -66,13 +73,16 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * A very simple Renderer that adds a marker and draws a cube on it.
  */
+public class SimpleRenderer extends ARRendererGLES20 {
 
-
-public class SimpleRenderer extends ARRenderer {
-
+    private int markerID = -1;
+    private CubeGLES20 cube;
+    private RectTex rect;
     private Context context;
     /**
-     * Markers can be configured here.
+     * This method gets called from the framework to setup the ARScene.
+     * So this is the best spot to configure you assets for your AR app.
+     * For example register used markers in here.
      */
     @Override
     public boolean configureARScene() {
@@ -100,102 +110,48 @@ public class SimpleRenderer extends ARRenderer {
         ArrayList<Canvas> tableaux = new ArrayList<Canvas>();
         tableaux.add(t);
         ConfigHolder.getInstance().init(tableaux);
-
         return true;
     }
     public SimpleRenderer(Context cont) {
         context = cont;
     }
+
+    //Shader calls should be within a GL thread that is onSurfaceChanged(), onSurfaceCreated() or onDrawFrame()
+    //As the cube instantiates the shader during setShaderProgram call we need to create the cube here.
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        super.onSurfaceCreated(gl,config);
+    public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+        super.onSurfaceCreated(unused, config);
+        ShaderProgram shaderProgram = new SimpleShaderProgram(new SimpleVertexShader(), new SimpleFragmentShader());
+        ConfigHolder.getInstance().setShaderProgram(shaderProgram);
+        float[][] tab = {
+                {0,100,0},
+                {100,100,0},
+                {100,0,0},
+                {0,0,0},
+        };
+        ArrayList<String> tmp = new ArrayList<String>();
+        tmp.add("Data/tex_pinball.png");
+        tmp.add("Data/tex_pinball2.png");
+        rect = new RectTex(tab,tmp,context);
+        rect.setShaderProgram(shaderProgram);
+
     }
 
     /**
-     * Override the draw function from ARRenderer.
+     * Override the render function from {@link ARRendererGLES20}.
      */
     @Override
-    public void draw(GL10 gl) {
+    public void draw() {
+        super.draw();
 
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glFrontFace(GLES20.GL_CW);
 
-        // Apply the ARToolKit projection matrix
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-
-        //Rotate it by 90 degrees
-        gl.glLoadIdentity();
-        gl.glRotatef(90.0f, 0.0f, 0.0f, -1.0f);
-        gl.glMultMatrixf(ARToolKit.getInstance().getProjectionMatrix(), 0);
-
-        gl.glEnable(GL10.GL_CULL_FACE);
-        gl.glShadeModel(GL10.GL_SMOOTH);
-        gl.glEnable(GL10.GL_DEPTH_TEST);
-        gl.glFrontFace(GL10.GL_CW);
-
-        ConfigHolder.getInstance().draw(gl);
-
-
-//        // If the marker is visible, apply its transformation, and draw a cube
-//        if (ARToolKit.getInstance().queryMarkerVisible(markerID)) {
-//            gl.glMatrixMode(GL10.GL_MODELVIEW);
-//            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID), 0);
-//
-//            int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID);
-//
-//            if(pattID!=0 && rectTex == null ){
-//                float[] matrix = new float[16];
-//                float[] height = new float[1];
-//                float[] width = new float[1];
-//                int[] imsX = new int[1];
-//                int[] imsY = new int[1];
-//                ARToolKit.getInstance().getMarkerPatternConfig(markerID,pattID-1,matrix,width,height,imsX,imsY);
-//                Log.d("SimpleRenderer","x:" + imsX[0] + " y:" + imsY[0]);
-//                float[][] array = new float[4][3];
-//                array[0][0] = 0.0f;
-//                array[0][1] = height[0];
-//                array[0][2] = 1.0f;
-//
-//                array[1][0] = width[0];
-//                array[1][1] = height[0];
-//                array[1][2] = 1.0f;
-//
-//                array[2][0] = width[0];
-//                array[2][1] = 0.0f;
-//                array[2][2] = 1.0f;
-//
-//                array[3][0] = 0.0f;
-//                array[3][1] = 0.0f;
-//                array[3][2] = 1.0f;
-//                ArrayList<String> list = new ArrayList<String>();
-//                list.add("Data/tex_pinball.png");
-//                rectTex = new RectTex(array,list);
-//            }
-//            if(rectTex != null){
-//                rectTex.draw(gl,context);
-//            }
-//
-//        }
-//        if (ARToolKit.getInstance().queryMarkerVisible(markerID2)) {
-//
-//            gl.glMatrixMode(GL10.GL_MODELVIEW);
-//            gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(markerID2), 0);
-//            int pattID = ARToolKit.getInstance().getMarkerPatternCount(markerID2);
-//
-//
-//            if(pattID!=0) {
-//                float[] matrix = new float[16];
-//                float[] height = new float[1];
-//                float[] width = new float[1];
-//                int[] imsX = new int[1];
-//                int[] imsY = new int[1];
-//                ARToolKit.getInstance().getMarkerPatternConfig(markerID2,pattID-1,matrix,width,height,imsX,imsY);
-//                gl.glTranslatef(width[0]/2.0f,height[0]/2.0f,1);
-//                gl.glScalef(width[0],height[0],1);
-//
-//            }
-//
-//            cubeTex.draw(gl);
-//        }
+        float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();
+        //ConfigHolder.getInstance().draw(projectionMatrix);
+        if(ARToolKit.getInstance().queryMarkerVisible(0))
+            rect.draw(projectionMatrix,ARToolKit.getInstance().queryMarkerTransformation(0));
 
     }
 }

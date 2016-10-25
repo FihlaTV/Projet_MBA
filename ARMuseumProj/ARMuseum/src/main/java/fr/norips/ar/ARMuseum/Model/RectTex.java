@@ -5,7 +5,9 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES10;
+import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,43 +21,54 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class RectTex extends Rectangle{
 
-    private boolean finished;
+    private boolean finished = false;
     private int[] textures;
 
     public RectTex(float pos[][],ArrayList<String> pathToTextures,Context context) {
         super(pos,pathToTextures,context);
     }
+    /** This will be used to pass in the texture. */
+    private int mTextureUniformHandle;
 
+    /** This will be used to pass in model position information. */
+    private int mPositionHandle;
+
+    /** This will be used to pass in model texture coordinate information. */
+    private int mTextureCoordinateHandle;
     /**
      * The object own drawing function.
      * Called from the renderer to redraw this instance
      * with possible changes in values.
      *
-     * @param gl - The GL Context
      */
+    public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+        if(finished == false) {
+            loadGLTexture(context,pathToTextures);
+        } else {
+            shaderProgram.setProjectionMatrix(projectionMatrix);
+            shaderProgram.setModelViewMatrix(modelViewMatrix);
+            GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
+            mTextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram.getShaderProgramHandle(), "a_TexCoordinate");
+            mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
+            // Set the active texture unit to texture unit 0.
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+
+            // Bind the texture to this unit.
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
+
+            // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
+            GLES20.glUniform1i(mTextureUniformHandle, 0);
+
+
+
+            shaderProgram.render(this.getmVertexBuffer(), this.getmTextureBuffer(), this.getmIndexBuffer());
+        }
+
+    }
+
     public void draw(GL10 gl) {
         //Load texture only draw, expecting not all model will be view, it will increase performance I think
-        if(finished == false) {
-            loadGLTexture(gl,context,pathToTextures);
-        } else {
-            gl.glEnable(GL10.GL_CULL_FACE);
-            gl.glFrontFace(GL10.GL_CW);
 
-            gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-            gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-            gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTexBuffer);
-            gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-
-            gl.glBindTexture(GLES10.GL_TEXTURE_2D, textures[currentTexture]);
-            gl.glEnable(GL10.GL_TEXTURE_2D);
-            gl.glDrawElements(GL10.GL_TRIANGLES, indices.length, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
-            gl.glDisable(GL10.GL_TEXTURE_2D);
-
-            gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-            gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-            gl.glDisable(GL10.GL_CULL_FACE);
-        }
     }
 
     /**
@@ -64,11 +77,11 @@ public class RectTex extends Rectangle{
      * @param gl      - The GL Context
      * @param context - The Activity context
      */
-    public void loadGLTexture(GL10 gl, Context context,ArrayList<String> pathToTextures) {
+    public void loadGLTexture(Context context,ArrayList<String> pathToTextures) {
 
         //Generate a number of texture, texture pointer...
         textures = new int[pathToTextures.size()];
-        gl.glGenTextures(pathToTextures.size(), textures, 0);
+        GLES20.glGenTextures(pathToTextures.size(), textures, 0);
 
         Bitmap bitmap = null;
 
@@ -77,15 +90,15 @@ public class RectTex extends Rectangle{
             bitmap = getBitmapFromAsset(context, pathToTextures.get(i));
 
             //...and bind it to our array
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
+            GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
 
             //Create Nearest Filtered Texture
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
+            GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+            GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
 
             //Different possible texture parameters, e.g. GL10.GL_CLAMP_TO_EDGE
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
+            GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
+            GLES20.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
 
             //Use the Android GLUtils to specify a two-dimensional texture image from our bitmap
             GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);

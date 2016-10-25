@@ -3,6 +3,8 @@ package fr.norips.ar.ARMuseum.Config;
 
 import android.content.Context;
 
+import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
+
 import fr.norips.ar.ARMuseum.Model.RectTex;
 import fr.norips.ar.ARMuseum.Model.Rectangle;
 
@@ -39,6 +41,7 @@ public class Model {
         }
         //TODO: Load texture on detection or on startup ?
         rect = new RectTex(pos,pathToTextures,context);
+
     }
 
     public Model(String name, Rectangle rect){
@@ -56,8 +59,8 @@ public class Model {
      *
      * @param gl GL10 Context
      */
-    public void draw(GL10 gl){
-        rect.draw(gl);
+    public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+        rect.draw(projectionMatrix,modelViewMatrix);
     }
 
     public void nextPage(){
@@ -66,5 +69,9 @@ public class Model {
 
     public void previousPage(){
         rect.previousTexture();
+    }
+
+    public void initGL(ShaderProgram shaderProgram){
+        rect.setShaderProgram(shaderProgram);
     }
 }

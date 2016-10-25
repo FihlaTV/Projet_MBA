@@ -38,6 +38,14 @@ public class RectMovie extends Rectangle{
         }
     }
     @Override
+    public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+
+        shaderProgram.setProjectionMatrix(projectionMatrix);
+        shaderProgram.setModelViewMatrix(modelViewMatrix);
+
+        shaderProgram.render(this.getmVertexBuffer(), this.getmTextureBuffer(), this.getmIndexBuffer());
+
+    }
     public void draw(GL10 gl) {
         loadGLTexture(gl);
         gl.glEnable(GL10.GL_CULL_FACE);

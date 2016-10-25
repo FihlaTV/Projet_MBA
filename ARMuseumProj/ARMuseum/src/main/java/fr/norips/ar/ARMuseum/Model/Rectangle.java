@@ -4,12 +4,18 @@ import android.content.Context;
 import android.util.Log;
 
 import org.artoolkit.ar.base.rendering.RenderUtils;
+import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
+import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
+import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
 
 /**
  * Created by norips on 24/10/16.
@@ -18,11 +24,12 @@ import javax.microedition.khronos.opengles.GL10;
 public abstract class Rectangle {
     protected FloatBuffer mVertexBuffer;
     protected FloatBuffer mTexBuffer;
-    protected ShortBuffer mIndexBuffer;
+    protected ByteBuffer mIndexBuffer;
     protected ArrayList<String> pathToTextures;
+    protected ShaderProgram shaderProgram = null;
     protected Context context;
     protected int currentTexture;
-    protected short[] indices = {0,1,2,2,3,0};          //      0***1
+    protected byte[] indices = {0,1,2,2,3,0};          //      0***1
                                                         //      *   *
                                                         //      3***2
 
@@ -42,22 +49,28 @@ public abstract class Rectangle {
      * @param pathToTextures An ArrayList<String> containing paths to your texture
      *
      */
-    public Rectangle(float pos[][],ArrayList<String> pathToTextures,Context context) {
+    public Rectangle(float pos[][], ArrayList<String> pathToTextures, Context context) {
         setArrays(pos);
         this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
         this.context = context;
         currentTexture = 0;
     }
 
-
     public FloatBuffer getmVertexBuffer() {
         return mVertexBuffer;
     }
 
-    public ShortBuffer getmIndexBuffer() {
+    public ByteBuffer getmIndexBuffer() {
         return mIndexBuffer;
     }
 
+    public FloatBuffer getmTextureBuffer() {
+        return mTexBuffer;
+    }
+
+    public void setShaderProgram(ShaderProgram shaderProgram){
+        this.shaderProgram = shaderProgram;
+    }
 
     private void setArrays(float pos[][]) {
 
@@ -71,11 +84,11 @@ public abstract class Rectangle {
         }
 
         mVertexBuffer = RenderUtils.buildFloatBuffer(vertices);
-        mIndexBuffer = RenderUtils.buildShortBuffer(indices);
+        mIndexBuffer = RenderUtils.buildByteBuffer(indices);
         mTexBuffer = RenderUtils.buildFloatBuffer(texCoords);
     }
 
-    public abstract void draw(GL10 gl);
+    public abstract void draw(float[] projectionMatrix, float[] modelViewMatrix);
 
     public void nextTexture(){
         if(currentTexture >= pathToTextures.size()-1){
