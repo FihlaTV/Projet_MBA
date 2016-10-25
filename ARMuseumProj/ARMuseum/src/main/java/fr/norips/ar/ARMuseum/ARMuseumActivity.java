@@ -51,9 +51,12 @@ package fr.norips.ar.ARMuseum;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 
 import fr.norips.ARMuseum.R;
+import fr.norips.ar.ARMuseum.Config.ConfigHolder;
+
 import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 
@@ -66,6 +69,21 @@ public class ARMuseumActivity extends ARActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls ARActivity's ctor, abstract class of ARBaseLib
         setContentView(R.layout.main);
+        FrameLayout f = (FrameLayout) findViewById(R.id.mainLayout);
+        f.setOnTouchListener(new OnSwipeTouchListener(ARMuseumActivity.this){
+            public void onSwipeTop() {
+                Toast.makeText(ARMuseumActivity.this, "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                ConfigHolder.getInstance().nextPage();
+            }
+            public void onSwipeLeft() {
+                ConfigHolder.getInstance().previousPage();
+            }
+            public void onSwipeBottom() {
+            }
+        });
+
     }
 
     /**

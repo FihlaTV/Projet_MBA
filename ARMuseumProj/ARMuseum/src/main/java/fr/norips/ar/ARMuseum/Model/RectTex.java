@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES10;
 import android.opengl.GLUtils;
 
 import java.io.IOException;
@@ -46,8 +47,8 @@ public class RectTex extends Rectangle{
             gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTexBuffer);
             gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
 
+            gl.glBindTexture(GLES10.GL_TEXTURE_2D, textures[currentTexture]);
             gl.glEnable(GL10.GL_TEXTURE_2D);
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
             gl.glDrawElements(GL10.GL_TRIANGLES, indices.length, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
             gl.glDisable(GL10.GL_TEXTURE_2D);
 

@@ -27,14 +27,29 @@ public class ConfigHolder {
      * @param gl
      */
     public void draw(GL10 gl){
-        for(Canvas t : targets){
-            if(ARToolKit.getInstance().queryMarkerVisible(t.getMarkerUID())) {
+        for(Canvas c : targets){
+            if(ARToolKit.getInstance().queryMarkerVisible(c.getMarkerUID())) {
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
-                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(t.getMarkerUID()), 0);
-                t.draw(gl);
+                gl.glLoadMatrixf(ARToolKit.getInstance().queryMarkerTransformation(c.getMarkerUID()), 0);
+                c.draw(gl);
             }
         }
     }
 
+    public void nextPage(){
+        for(Canvas c : targets){
+            if(ARToolKit.getInstance().queryMarkerVisible(c.getMarkerUID())) {
+                c.nextPage();
+            }
+        }
+    }
+
+    public void previousPage(){
+        for(Canvas c : targets){
+            if(ARToolKit.getInstance().queryMarkerVisible(c.getMarkerUID())) {
+                c.previousPage();
+            }
+        }
+    }
 
 }

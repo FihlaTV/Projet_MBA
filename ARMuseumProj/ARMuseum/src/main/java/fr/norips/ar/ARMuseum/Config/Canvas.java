@@ -70,4 +70,16 @@ public class Canvas {
         }
     }
 
+    public void nextPage(){
+        for(Model model : models){
+            model.nextPage();
+        }
+    }
+
+    public void previousPage(){
+        for(Model model : models){
+            model.previousPage();
+        }
+    }
+
 }

@@ -86,6 +86,7 @@ public class SimpleRenderer extends ARRenderer {
         };
         ArrayList<String> tmp = new ArrayList<String>();
         tmp.add("Data/tex_pinball.png");
+        tmp.add("Data/tex_pinball2.png");
         t.addModel(new Model("Sur tableau",tab,tmp,context));
         float[][] tab2 = {
                 {-100,100,0},
@@ -93,9 +94,9 @@ public class SimpleRenderer extends ARRenderer {
                 {0,0,0},
                 {-100,0,0},
         };
-        tmp.clear();
-        tmp.add("Data/movie.mp4");
-        t.addModel(new Model("Cote tableau",new RectMovie(tab2,tmp,context)));
+        //tmp.clear();
+        //tmp.add("Data/movie.mp4");
+        //t.addModel(new Model("Cote tableau",new RectMovie(tab2,tmp,context)));
         ArrayList<Canvas> tableaux = new ArrayList<Canvas>();
         tableaux.add(t);
         ConfigHolder.getInstance().init(tableaux);

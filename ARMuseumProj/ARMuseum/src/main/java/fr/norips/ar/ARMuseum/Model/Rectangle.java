@@ -21,6 +21,7 @@ public abstract class Rectangle {
     protected ShortBuffer mIndexBuffer;
     protected ArrayList<String> pathToTextures;
     protected Context context;
+    protected int currentTexture;
     protected short[] indices = {0,1,2,2,3,0};          //      0***1
                                                         //      *   *
                                                         //      3***2
@@ -45,6 +46,7 @@ public abstract class Rectangle {
         setArrays(pos);
         this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
         this.context = context;
+        currentTexture = 0;
     }
 
 
@@ -74,4 +76,21 @@ public abstract class Rectangle {
     }
 
     public abstract void draw(GL10 gl);
+
+    public void nextTexture(){
+        if(currentTexture >= pathToTextures.size()-1){
+            currentTexture = 0;
+        } else {
+            currentTexture++;
+        }
+
+    }
+    public void previousTexture(){
+        if(currentTexture == 0){
+            currentTexture = pathToTextures.size()-1;
+        } else {
+            currentTexture--;
+        }
+
+    }
 }

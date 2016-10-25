@@ -17,8 +17,6 @@ import javax.microedition.khronos.opengles.GL10;
 public class Model {
     private String name;
     private float pos[][] = new float[4][3];
-    private ArrayList<String> pathToTextures;
-    private ArrayList<Integer> texture_id;
     private Rectangle rect;
 
     /**
@@ -60,5 +58,13 @@ public class Model {
      */
     public void draw(GL10 gl){
         rect.draw(gl);
+    }
+
+    public void nextPage(){
+        rect.nextTexture();
+    }
+
+    public void previousPage(){
+        rect.previousTexture();
     }
 }
