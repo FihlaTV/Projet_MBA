@@ -42,26 +42,19 @@ public class RectTex extends Rectangle{
      *
      */
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+        GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
+        shaderProgram.setProjectionMatrix(projectionMatrix);
+        shaderProgram.setModelViewMatrix(modelViewMatrix);
         if(finished == false) {
             loadGLTexture(context,pathToTextures);
         } else {
-            shaderProgram.setProjectionMatrix(projectionMatrix);
-            shaderProgram.setModelViewMatrix(modelViewMatrix);
-            GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
             mTextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram.getShaderProgramHandle(), "a_TexCoordinate");
             mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
-            // Set the active texture unit to texture unit 0.
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-
-            // Bind the texture to this unit.
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
 
             // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-            GLES20.glUniform1i(mTextureUniformHandle, 0);
+            GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
 
-
-
-            shaderProgram.render(this.getmVertexBuffer(), this.getmTextureBuffer(), this.getmIndexBuffer());
+            shaderProgram.render(this.getmVertexBuffer(),this.getmTextureBuffer() , this.getmIndexBuffer());
         }
 
     }
@@ -90,6 +83,7 @@ public class RectTex extends Rectangle{
             bitmap = getBitmapFromAsset(context, pathToTextures.get(i));
 
             //...and bind it to our array
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + i);
             GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
 
             //Create Nearest Filtered Texture

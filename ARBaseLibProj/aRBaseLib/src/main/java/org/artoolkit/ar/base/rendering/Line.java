@@ -153,7 +153,11 @@ public class Line {
     }
 
     public void setColor(float[] color) {
-        this.color = color;
+        this.color[0] = color[0];
+        this.color[1] = color[1];
+        this.color[2] = color[2];
+        this.color[3] = color[3];
+        setArrays();
     }
 
 

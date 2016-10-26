@@ -34,7 +34,7 @@
  *  Author(s): Julian Looser, Philip Lamb
  *
  */
-package fr.norips.ar.ARMuseum.shader;
+package fr.norips.ar.ARMuseum.shader.shaderCouleur;
 
 import org.artoolkit.ar.base.rendering.gles20.BaseFragmentShader;
 
@@ -45,7 +45,7 @@ import org.artoolkit.ar.base.rendering.gles20.BaseFragmentShader;
  * Here you define your fragment shader and what it does with the given color.
  * In that case it just applies it to the geometry and prints it on the screen.
  */
-public class SimpleFragmentShader extends BaseFragmentShader {
+public class SimpleFragmentShader2 extends BaseFragmentShader {
 
     /**
      * We get the color to apply to the rendered geometry from the vertex shader.
@@ -53,13 +53,15 @@ public class SimpleFragmentShader extends BaseFragmentShader {
      * Therefor OpenGL 2.0 uses the gl_FragColor variable
      */
     final String fragmentShader =
-           "precision mediump float;"+
-           "uniform sampler2D u_Texture;"+
-            "varying vec2 v_TexCoordinate;"+
+            "precision mediump float;       \n"     // Set the default precision to medium. We don't need as high of a
+                    // precision in the fragment shader.
+                    + "varying vec4 v_Color;          \n"     // This is the color from the vertex shader interpolated across the
+                    // triangle per fragment.
+                    + "void main()                    \n"     // The entry point for our fragment shader.
+                    + "{                              \n"
+                    + "   gl_FragColor = v_Color;     \n"     // Pass the color directly through the pipeline.
+                    + "}                              \n";
 
-            "void main() {"+
-            "    gl_FragColor = texture2D(u_Texture, v_TexCoordinate);"+
-            "}";
     /**
      * This method gets called by the {@link org.artoolkit.ar.base.rendering.gles20.BaseShaderProgram}
      * during initializing the shaders.

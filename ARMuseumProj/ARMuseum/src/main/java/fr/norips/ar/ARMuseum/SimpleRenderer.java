@@ -51,10 +51,13 @@ package fr.norips.ar.ARMuseum;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import org.artoolkit.ar.base.ARToolKit;
+import org.artoolkit.ar.base.rendering.Line;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
 import org.artoolkit.ar.base.rendering.gles20.CubeGLES20;
+import org.artoolkit.ar.base.rendering.gles20.LineGLES20;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.util.ArrayList;
@@ -66,6 +69,9 @@ import fr.norips.ar.ARMuseum.Model.RectTex;
 import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
 import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
 import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
+import fr.norips.ar.ARMuseum.shader.shaderCouleur.SimpleFragmentShader2;
+import fr.norips.ar.ARMuseum.shader.shaderCouleur.SimpleShaderProgram2;
+import fr.norips.ar.ARMuseum.shader.shaderCouleur.SimpleVertexShader2;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -77,8 +83,10 @@ public class SimpleRenderer extends ARRendererGLES20 {
 
     private int markerID = -1;
     private CubeGLES20 cube;
+    private ArrayList<LineGLES20> lines = new ArrayList<LineGLES20>();
     private RectTex rect;
     private Context context;
+    private float tmpMatrix[] = new float[16];
     /**
      * This method gets called from the framework to setup the ARScene.
      * So this is the best spot to configure you assets for your AR app.
@@ -131,9 +139,39 @@ public class SimpleRenderer extends ARRendererGLES20 {
         };
         ArrayList<String> tmp = new ArrayList<String>();
         tmp.add("Data/tex_pinball.png");
-        tmp.add("Data/tex_pinball2.png");
         rect = new RectTex(tab,tmp,context);
         rect.setShaderProgram(shaderProgram);
+        cube = new CubeGLES20(100.0f, 0.0f, 0.0f, 1.0f);
+        shaderProgram = new SimpleShaderProgram2(new SimpleVertexShader2(),new SimpleFragmentShader2());
+        cube.setShaderProgram(shaderProgram);
+
+        float start[] = {0f,0f,0f};
+        float end[] = {100f,0f,0f};
+        float color[] = {1.0f,0.0f,0.0f,1.0f};
+        LineGLES20 tmpL = new LineGLES20(start,end,40.0f);
+        tmpL.setColor(color);
+        tmpL.setShaderProgram(shaderProgram);
+        lines.add(tmpL);
+        end[0] = 0.0f;
+        end[1] = 100.0f;
+        tmpL = new LineGLES20(start,end,40.0f);
+        color[0] = 0;
+        color[1] = 1.0f;
+        tmpL.setColor(color);
+        tmpL.setShaderProgram(shaderProgram);
+        lines.add(tmpL);
+        end[0] = 0.0f;
+        end[1] = 0.0f;
+        end[2] = 100.0f;
+        tmpL = new LineGLES20(start,end,40.0f);
+        color[0] = 0;
+        color[1] = 0;
+        color[2] = 1.0f;
+        tmpL.setColor(color);
+        tmpL.setShaderProgram(shaderProgram);
+        lines.add(tmpL);
+
+
 
     }
 
@@ -142,16 +180,26 @@ public class SimpleRenderer extends ARRendererGLES20 {
      */
     @Override
     public void draw() {
-        super.draw();
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();
+        Matrix.setIdentityM(tmpMatrix,0);
+        Matrix.rotateM(tmpMatrix,0,90.0f, 0.0f, 0.0f, -1.0f);
+        Matrix.multiplyMM(projectionMatrix,0,tmpMatrix,0,projectionMatrix,0);
 
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glFrontFace(GLES20.GL_CW);
-
-        float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();
         //ConfigHolder.getInstance().draw(projectionMatrix);
-        if(ARToolKit.getInstance().queryMarkerVisible(0))
-            rect.draw(projectionMatrix,ARToolKit.getInstance().queryMarkerTransformation(0));
+        if(ARToolKit.getInstance().queryMarkerVisible(0)) {
+            //float width[] = new float[1];
+            //float height[] = new float[1];
+            //ARToolKit.getInstance().getMarkerPatternConfig(0,0,null,width,height,null,null);
+            float[] modelMatrix = ARToolKit.getInstance().queryMarkerTransformation(0);
+            //rect.draw(projectionMatrix, modelMatrix);
+            cube.draw(projectionMatrix,modelMatrix);
+//            for(LineGLES20 l : lines)
+//                l.draw(projectionMatrix,modelMatrix);
+        }
 
     }
 }

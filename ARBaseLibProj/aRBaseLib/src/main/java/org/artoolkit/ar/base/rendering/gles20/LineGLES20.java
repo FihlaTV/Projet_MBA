@@ -36,6 +36,8 @@
  */
 package org.artoolkit.ar.base.rendering.gles20;
 
+import android.opengl.GLES20;
+
 import org.artoolkit.ar.base.rendering.Line;
 
 /**
@@ -58,6 +60,14 @@ public class LineGLES20 extends Line implements ARDrawableOpenGLES20 {
         this.shaderProgram = shaderProgram;
     }
 
+    public LineGLES20(float start[],float end[],float width){
+        super(start,end,width);
+    }
+
+    public void setColor(float[] color){
+        super.setColor(color);
+    }
+
     @Override
     /**
      * Used to render objects when working with OpenGL ES 2.x
@@ -69,8 +79,8 @@ public class LineGLES20 extends Line implements ARDrawableOpenGLES20 {
 
         shaderProgram.setProjectionMatrix(projectionMatrix);
         shaderProgram.setModelViewMatrix(modelViewMatrix);
-
-        this.setArrays();
+        GLES20.glLineWidth(getWidth());
+        //this.setArrays();
         shaderProgram.render(this.getMVertexBuffer(), this.getmColorBuffer(), null);
 
     }

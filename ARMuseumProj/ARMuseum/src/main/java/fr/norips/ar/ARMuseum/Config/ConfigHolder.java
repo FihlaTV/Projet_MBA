@@ -43,7 +43,7 @@ public class ConfigHolder {
     public void draw(float[] projectionMatrix){
         if(finish) {
             if(first){
-                //initGL();
+                initGL();
                 first = false;
             } else {
                 for (Canvas c : targets) {
