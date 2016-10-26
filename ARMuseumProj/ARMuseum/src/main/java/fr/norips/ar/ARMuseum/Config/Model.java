@@ -5,12 +5,10 @@ import android.content.Context;
 
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
-import fr.norips.ar.ARMuseum.Model.RectTex;
-import fr.norips.ar.ARMuseum.Model.Rectangle;
-
 import java.util.ArrayList;
 
-import javax.microedition.khronos.opengles.GL10;
+import fr.norips.ar.ARMuseum.Drawable.RectTex;
+import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 
 /**
  * Created by norips on 20/10/16.
@@ -56,8 +54,10 @@ public class Model {
     }
 
     /**
+     * Draw all models and scale them to marker
+     * @param projectionMatrix Float projectionMatrix.
+     * @param modelViewMatrix Float modelViewMatrix.
      *
-     * @param gl GL10 Context
      */
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
         rect.draw(projectionMatrix,modelViewMatrix);

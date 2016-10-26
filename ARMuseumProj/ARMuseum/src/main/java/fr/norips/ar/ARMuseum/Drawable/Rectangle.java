@@ -1,27 +1,21 @@
-package fr.norips.ar.ARMuseum.Model;
+package fr.norips.ar.ARMuseum.Drawable;
 
 import android.content.Context;
 import android.util.Log;
 
 import org.artoolkit.ar.base.rendering.RenderUtils;
+import org.artoolkit.ar.base.rendering.gles20.ARDrawableOpenGLES20;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
-
-import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
-import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
-import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
 
 /**
  * Created by norips on 24/10/16.
  */
 
-public abstract class Rectangle {
+public abstract class Rectangle implements ARDrawableOpenGLES20{
     protected FloatBuffer mVertexBuffer;
     protected FloatBuffer mTexBuffer;
     protected ByteBuffer mIndexBuffer;

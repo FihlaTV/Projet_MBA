@@ -37,8 +37,6 @@
 package fr.norips.ar.ARMuseum.shader;
 
 import android.opengl.GLES20;
-import android.opengl.GLUtils;
-import android.util.Log;
 
 import org.artoolkit.ar.base.rendering.gles20.OpenGLShader;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;

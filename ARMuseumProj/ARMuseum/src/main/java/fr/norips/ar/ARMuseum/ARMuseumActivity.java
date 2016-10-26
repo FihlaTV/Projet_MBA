@@ -53,12 +53,11 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import org.artoolkit.ar.base.ARActivity;
+import org.artoolkit.ar.base.rendering.ARRenderer;
 
 import fr.norips.ARMuseum.R;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
-
-import org.artoolkit.ar.base.ARActivity;
-import org.artoolkit.ar.base.rendering.ARRenderer;
 
 /**
  * A very simple example of extending ARActivity to create a new AR application.

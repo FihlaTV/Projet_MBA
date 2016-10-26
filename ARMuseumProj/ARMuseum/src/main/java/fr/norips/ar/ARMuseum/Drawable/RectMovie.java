@@ -1,4 +1,4 @@
-package fr.norips.ar.ARMuseum.Model;
+package fr.norips.ar.ARMuseum.Drawable;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

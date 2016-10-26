@@ -1,14 +1,11 @@
 package fr.norips.ar.ARMuseum.Config;
 
-import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by norips on 20/10/16.
@@ -64,22 +61,14 @@ public class Canvas {
         models.add(model);
     }
 
-//    /**
-//     * Draw all models and scale them to marker
-//     * @param gl GL10 context
-//     */
-//    public void draw(GL10 gl){
-//        if(ARToolKit.getInstance().getMarkerPatternCount(markerID)>0){
-//            float width[] = new float[1];
-//            float height[] = new float[1];
-//            ARToolKit.getInstance().getMarkerPatternConfig(markerID,0,null,width,height,null,null);
-//            gl.glScalef(width[0]/100.0f,height[0]/100.0f,1.0f);
-//        }
-//        for(Model model : models){
-//            model.draw(gl);
-//        }
-//    }
 
+
+    /**
+     * Draw all models and scale them to marker
+     * @param projectionMatrix Float projectionMatrix.
+     * @param modelViewMatrix Float modelViewMatrix.
+     *
+     */
     public void draw(float[] projectionMatrix, float[] modelViewMatrix){
         if(ARToolKit.getInstance().getMarkerPatternCount(markerID)>0){
             float width[] = new float[1];

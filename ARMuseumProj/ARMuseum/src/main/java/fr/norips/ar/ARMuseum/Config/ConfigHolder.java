@@ -1,13 +1,9 @@
 package fr.norips.ar.ARMuseum.Config;
 
-import android.util.Log;
-
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by norips on 20/10/16.
@@ -38,7 +34,9 @@ public class ConfigHolder {
     }
 
     /**
-     * Draw all VISIBLE canvas
+     * Draw all models and scale them to marker
+     * @param projectionMatrix Float projectionMatrix.
+     *
      */
     public void draw(float[] projectionMatrix){
         if(finish) {

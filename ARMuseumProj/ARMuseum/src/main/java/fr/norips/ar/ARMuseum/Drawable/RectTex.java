@@ -1,13 +1,11 @@
-package fr.norips.ar.ARMuseum.Model;
+package fr.norips.ar.ARMuseum.Drawable;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +39,8 @@ public class RectTex extends Rectangle{
      * with possible changes in values.
      *
      */
+
+
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
         GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
         shaderProgram.setProjectionMatrix(projectionMatrix);
@@ -59,16 +59,11 @@ public class RectTex extends Rectangle{
 
     }
 
-    public void draw(GL10 gl) {
-        //Load texture only draw, expecting not all model will be view, it will increase performance I think
-
-    }
-
     /**
      * Load the textures
      *
-     * @param gl      - The GL Context
      * @param context - The Activity context
+     * @param pathToTextures ArrayList of path to textures
      */
     public void loadGLTexture(Context context,ArrayList<String> pathToTextures) {
 
