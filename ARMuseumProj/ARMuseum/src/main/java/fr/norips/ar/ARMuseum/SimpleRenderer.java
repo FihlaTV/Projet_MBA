@@ -52,8 +52,10 @@ package fr.norips.ar.ARMuseum;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import org.artoolkit.ar.base.ARToolKit;
+import org.artoolkit.ar.base.NativeInterface;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
 import org.artoolkit.ar.base.rendering.gles20.CubeGLES20;
 import org.artoolkit.ar.base.rendering.gles20.LineGLES20;
@@ -76,7 +78,7 @@ import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
  * A very simple Renderer that adds a marker and draws a cube on it.
  */
 public class SimpleRenderer extends ARRendererGLES20 {
-
+    private final static String TAG = "SimpleRenderer";
     private int markerID = -1;
     private CubeGLES20 cube;
     private ArrayList<LineGLES20> lines = new ArrayList<LineGLES20>();
@@ -102,19 +104,41 @@ public class SimpleRenderer extends ARRendererGLES20 {
         tmp.add("Data/tex_pinball.png");
         tmp.add("Data/tex_pinball2.png");
         t.addModel(new Model("Sur tableau",tab,tmp,context));
-        float[][] tab2 = {
-                {-100,100,0},
+
+        Canvas tournesol = new Canvas("Tournesol","Data/tournesol");
+        float[][] tabTournesol = {
                 {0,100,0},
+                {100,100,0},
+                {100,0,0},
                 {0,0,0},
-                {-100,0,0},
         };
+        ArrayList<String> tmpTournesol = new ArrayList<String>();
+        tmpTournesol.add("Data/tex_tournesol.jpg");
+        tmpTournesol.add("Data/tex_tournesolbis.jpg");
+        tournesol.addModel(new Model("Sur tableau",tabTournesol,tmpTournesol,context));
+
+        Canvas tournesol2 = new Canvas("Tournesol2","Data/tournesol2");
+        float[][] tabTournesol2 = {
+                {0,100,0},
+                {100,100,0},
+                {100,0,0},
+                {0,0,0},
+        };
+        ArrayList<String> tmpTournesol2 = new ArrayList<String>();
+        tmpTournesol.add("Data/tex_tournesol2.jpg");
+        tmpTournesol.add("Data/tex_tournesol2bis.jpg");
+        tournesol2.addModel(new Model("Sur tableau",tabTournesol2,tmpTournesol2,context));
         //TODO: Use openGL 2.0 to show video
         //tmp.clear();
         //tmp.add("Data/movie.mp4");
         //t.addModel(new Model("Cote tableau",new RectMovie(tab2,tmp,context)));
         ArrayList<Canvas> tableaux = new ArrayList<Canvas>();
         tableaux.add(t);
+        tableaux.add(tournesol);
+        tableaux.add(tournesol2);
         ConfigHolder.getInstance().init(tableaux);
+        Log.d(TAG,"Threshold mode = " + ARToolKit.getInstance().getThresholdMode());
+
         return true;
     }
     public SimpleRenderer(Context cont) {
@@ -135,6 +159,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
      */
     @Override
     public void draw() {
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();
         //Rotate matrix

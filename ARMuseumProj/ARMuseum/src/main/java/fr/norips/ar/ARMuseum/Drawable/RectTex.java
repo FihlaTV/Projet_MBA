@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.os.Handler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +40,21 @@ public class RectTex extends Rectangle{
      * with possible changes in values.
      *
      */
-
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+      /* do what you need to do */
+            reInitLoad();
+        }
+    };
+    private void reInitLoad(){
+        finished = false;
+    }
 
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable,1000);
         GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
         shaderProgram.setProjectionMatrix(projectionMatrix);
         shaderProgram.setModelViewMatrix(modelViewMatrix);
@@ -50,7 +63,7 @@ public class RectTex extends Rectangle{
         } else {
             mTextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram.getShaderProgramHandle(), "a_TexCoordinate");
             mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
-
+            GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[currentTexture]);
             // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
             GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
 
