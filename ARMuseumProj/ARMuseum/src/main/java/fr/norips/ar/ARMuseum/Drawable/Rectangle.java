@@ -62,10 +62,9 @@ public abstract class Rectangle implements ARDrawableOpenGLES20{
         return mTexBuffer;
     }
 
-    public void setShaderProgram(ShaderProgram shaderProgram){
+    public void setShaderProgram(ShaderProgram shaderProgram) {
         this.shaderProgram = shaderProgram;
     }
-
     private void setArrays(float pos[][]) {
 
 

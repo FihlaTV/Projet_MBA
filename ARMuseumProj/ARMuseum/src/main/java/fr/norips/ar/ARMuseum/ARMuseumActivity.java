@@ -49,11 +49,18 @@
 
 package fr.norips.ar.ARMuseum;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.artoolkit.ar.base.ARActivity;
+import org.artoolkit.ar.base.camera.CaptureCameraPreview;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 
 import fr.norips.ARMuseum.R;
@@ -62,8 +69,10 @@ import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 /**
  * A very simple example of extending ARActivity to create a new AR application.
  */
+
 public class ARMuseumActivity extends ARActivity {
 
+    private final static int REQUEST_READ = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls ARActivity's ctor, abstract class of ARBaseLib
@@ -82,7 +91,67 @@ public class ARMuseumActivity extends ARActivity {
             public void onSwipeBottom() {
             }
         });
+        try
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.CAMERA))
+                {
+                    if (this.shouldShowRequestPermissionRationale(Manifest.permission.CAMERA))
+                    {
+                        // Will drop in here if user denied permissions access camera before.
+                        // Or no uses-permission CAMERA element is in the
+                        // manifest file. Must explain to the end user why the app wants
+                        // permissions to the camera devices.
+                        Toast.makeText(this.getApplicationContext(),
+                                "App requires access to camera to be granted",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    // Request permission from the user to access the camera.
+                    Log.i(TAG, "CaptureCameraPreview(): must ask user for camera access permission");
+                    this.requestPermissions(new String[]
+                                    {
+                                            Manifest.permission.READ_EXTERNAL_STORAGE
+                                    },
+                            REQUEST_READ);
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, "CaptureCameraPreview(): exception caught, " + ex.getMessage());
+            return;
+        }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionsResult(): called");
+        if (requestCode == REQUEST_READ) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(),
+                        "Application will not run with folder access denied",
+                        Toast.LENGTH_LONG).show();
+            }
+            else if (1 <= permissions.length) {
+                Toast.makeText(getApplicationContext(),
+                        String.format("Reading file access permission \"%s\" allowed", permissions[0]),
+                        Toast.LENGTH_SHORT).show();
+            }
+            CaptureCameraPreview previewHook = getCameraPreview();
+            if (null != previewHook) {
+                Log.i(TAG, "onRequestPermissionsResult(): reset ask for cam access perm");
+                previewHook.resetGettingCameraAccessPermissionsFromUserState();
+            }
+        }
+        else
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

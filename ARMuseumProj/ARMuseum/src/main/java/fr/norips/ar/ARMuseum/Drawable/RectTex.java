@@ -30,11 +30,7 @@ public class RectTex extends Rectangle{
     /** This will be used to pass in the texture. */
     private int mTextureUniformHandle;
 
-    /** This will be used to pass in model position information. */
-    private int mPositionHandle;
 
-    /** This will be used to pass in model texture coordinate information. */
-    private int mTextureCoordinateHandle;
     /**
      * The object own drawing function.
      * Called from the renderer to redraw this instance
@@ -62,9 +58,9 @@ public class RectTex extends Rectangle{
         if(finished == false) {
             loadGLTexture(context,pathToTextures);
         } else {
-            mTextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram.getShaderProgramHandle(), "a_TexCoordinate");
             mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
             GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[currentTexture]);
+            //GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + currentTexture);
             // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
             GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
 

@@ -34,7 +34,7 @@
  *  Author(s): Julian Looser, Philip Lamb
  *
  */
-package fr.norips.ar.ARMuseum.shader;
+package fr.norips.ar.ARMuseum.shaderMovie;
 
 import org.artoolkit.ar.base.rendering.gles20.BaseVertexShader;
 import org.artoolkit.ar.base.rendering.gles20.OpenGLShader;
@@ -46,7 +46,7 @@ import org.artoolkit.ar.base.rendering.gles20.OpenGLShader;
  * This vertex shader class calculates the MVP matrix and applies it to the passed
  * in geometry position vectors.
  */
-public class SimpleVertexShader extends BaseVertexShader {
+public class VertexShaderMovie extends BaseVertexShader {
 
     public static String textureVectorString = "a_TexCoordinate";
     final String vertexShader =

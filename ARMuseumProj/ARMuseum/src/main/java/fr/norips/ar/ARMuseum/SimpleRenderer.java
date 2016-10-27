@@ -69,10 +69,15 @@ import javax.microedition.khronos.opengles.GL10;
 import fr.norips.ar.ARMuseum.Config.Canvas;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 import fr.norips.ar.ARMuseum.Config.Model;
+import fr.norips.ar.ARMuseum.Drawable.RectMovie;
 import fr.norips.ar.ARMuseum.Drawable.RectTex;
+import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
 import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
 import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
+import fr.norips.ar.ARMuseum.shaderMovie.FragmentShaderMovie;
+import fr.norips.ar.ARMuseum.shaderMovie.ShaderProgramMovie;
+import fr.norips.ar.ARMuseum.shaderMovie.VertexShaderMovie;
 
 /**
  * A very simple Renderer that adds a marker and draws a cube on it.
@@ -85,6 +90,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
     private RectTex rect;
     private Context context;
     private float tmpMatrix[] = new float[16];
+    private Rectangle rectMovie=null;
     /**
      * This method gets called from the framework to setup the ARScene.
      * So this is the best spot to configure you assets for your AR app.
@@ -104,6 +110,16 @@ public class SimpleRenderer extends ARRendererGLES20 {
         tmp.add("Data/tex_pinball.png");
         tmp.add("Data/tex_pinball2.png");
         t.addModel(new Model("Sur tableau",tab,tmp,context));
+        float[][] tabVideo = {
+            {-100,100,0},
+            {0,100,0},
+            {0,0,0},
+            {-100,0,0},
+        };
+        tmp.clear();
+        tmp.add("Data/movie.mp4");
+        rectMovie = new RectMovie(tabVideo,tmp,context);
+        t.addModel(new Model("Video cote",rectMovie));
 
         Canvas tournesol = new Canvas("Tournesol","Data/tournesol");
         float[][] tabTournesol = {
@@ -144,7 +160,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
     public SimpleRenderer(Context cont) {
         context = cont;
     }
-
+    private ShaderProgram shaderProgramMovie;
     //Shader calls should be within a GL thread that is onSurfaceChanged(), onSurfaceCreated() or onDrawFrame()
     //As the cube instantiates the shader during setShaderProgram call we need to create the cube here.
     @Override
@@ -152,6 +168,8 @@ public class SimpleRenderer extends ARRendererGLES20 {
         super.onSurfaceCreated(unused, config);
         ShaderProgram shaderProgram = new SimpleShaderProgram(new SimpleVertexShader(), new SimpleFragmentShader());
         ConfigHolder.getInstance().setShaderProgram(shaderProgram);
+        shaderProgramMovie = new ShaderProgramMovie(new VertexShaderMovie(),new FragmentShaderMovie());
+
     }
 
     /**
@@ -172,6 +190,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glFrontFace(GLES20.GL_CW);
         ConfigHolder.getInstance().draw(projectionMatrix);
+        rectMovie.setShaderProgram(shaderProgramMovie);
 
     }
 }
