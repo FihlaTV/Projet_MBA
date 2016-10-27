@@ -125,8 +125,8 @@ public class SimpleRenderer extends ARRendererGLES20 {
                 {0,0,0},
         };
         ArrayList<String> tmpTournesol2 = new ArrayList<String>();
-        tmpTournesol.add("Data/tex_tournesol2.jpg");
-        tmpTournesol.add("Data/tex_tournesol2bis.jpg");
+        tmpTournesol2.add("Data/tex_tournesol2.jpg");
+        tmpTournesol2.add("Data/tex_tournesol2bis.jpg");
         tournesol2.addModel(new Model("Sur tableau",tabTournesol2,tmpTournesol2,context));
         //TODO: Use openGL 2.0 to show video
         //tmp.clear();

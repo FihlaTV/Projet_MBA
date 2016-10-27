@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +20,9 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 public class RectTex extends Rectangle{
-
+    private final static String TAG = "RectTex";
     private boolean finished = false;
-    private int[] textures;
+    private int[] textures = null;
 
     public RectTex(float pos[][],ArrayList<String> pathToTextures,Context context) {
         super(pos,pathToTextures,context);
