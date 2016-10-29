@@ -49,7 +49,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
         lenMs = Long.parseLong(lengthMsStr);
         mMediaPlayer = new MediaPlayer();
         try {
-            mMediaPlayer.setDataSource("Data/movie.mp4");
+            mMediaPlayer.setDataSource(pathToTextures.get(0));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,6 +143,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
         Surface surface = new Surface(mSurface);
         mMediaPlayer.setSurface(surface);
         surface.release();
+        mMediaPlayer.setLooping(true);
 
         try {
             mMediaPlayer.prepare();
