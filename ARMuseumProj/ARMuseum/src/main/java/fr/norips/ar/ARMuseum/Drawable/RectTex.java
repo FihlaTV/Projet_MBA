@@ -23,6 +23,7 @@ public class RectTex extends Rectangle{
     private final static String TAG = "RectTex";
     private boolean finished = false;
     private int[] textures = null;
+    private int[] textureAct = null;
 
     public RectTex(float pos[][],ArrayList<String> pathToTextures,Context context) {
         super(pos,pathToTextures,context);
@@ -46,24 +47,29 @@ public class RectTex extends Rectangle{
         }
     };
     private void reInitLoad(){
+        for (int i = 0; i < pathToTextures.size(); i++)
+            stack.addFirst(textureAct[i]);
+
         finished = false;
     }
 
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+        //Time out
         handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable,1000);
+        handler.postDelayed(runnable,10000);
+        super.draw(projectionMatrix,modelViewMatrix);
         GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
         shaderProgram.setProjectionMatrix(projectionMatrix);
         shaderProgram.setModelViewMatrix(modelViewMatrix);
         if(finished == false) {
+            Log.d(TAG,"loadGLTexture called");
             loadGLTexture(context,pathToTextures);
+            Log.d(TAG,"loadGLTexture exited");
         } else {
             mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
-            GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[currentTexture]);
-            //GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + currentTexture);
-            // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-            GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
-
+            // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit textureAct[currentTexture].
+            GLES20.glUniform1i(mTextureUniformHandle, textureAct[currentTexture]);
+            Log.d(TAG,"Current texture" + textureAct[currentTexture]);
             shaderProgram.render(this.getmVertexBuffer(),this.getmTextureBuffer() , this.getmIndexBuffer());
         }
 
@@ -79,6 +85,7 @@ public class RectTex extends Rectangle{
 
         //Generate a number of texture, texture pointer...
         textures = new int[pathToTextures.size()];
+        textureAct = new int[pathToTextures.size()];
         GLES20.glGenTextures(pathToTextures.size(), textures, 0);
 
         Bitmap bitmap = null;
@@ -88,7 +95,8 @@ public class RectTex extends Rectangle{
             bitmap = getBitmapFromAsset(context, pathToTextures.get(i));
 
             //...and bind it to our array
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + i);
+            textureAct[i] = stack.removeFirst();
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + textureAct[i]);
             GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
 
             //Create Nearest Filtered Texture

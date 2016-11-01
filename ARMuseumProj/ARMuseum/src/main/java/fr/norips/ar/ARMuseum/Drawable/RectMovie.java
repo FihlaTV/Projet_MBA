@@ -59,6 +59,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
     private MediaPlayer mMediaPlayer;
     @Override
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
+        super.draw(projectionMatrix,modelViewMatrix);
         GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
         shaderProgram.setProjectionMatrix(projectionMatrix);
         shaderProgram.setModelViewMatrix(modelViewMatrix);

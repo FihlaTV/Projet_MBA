@@ -1,0 +1,80 @@
+{
+  "canvas": [
+    {
+      "name": "pinball",
+      "feature": "Data/pinball",
+      "models": [
+        {
+          "_comment": "t = top; b = bottom; l = left; r = right; c = corner",
+          "name": "Pinball carre centre 100",
+          "tlc": "0,100,0",
+          "trc": "100,100,0",
+          "brc": "100,0,0",
+          "blc": "0,0,0",
+          "textures": [
+            {
+              "path": "Data/tex_pinball.png"
+            },
+            {
+              "path": "Data/tex_pinball2.png"
+            }
+          ]
+        },
+        {
+          "_comment": "t = top; b = bottom; l = left; r = right; c = corner",
+          "name": "Pinball carre decale 100",
+          "tlc": "-100,100,0",
+          "trc": "0,100,0",
+          "brc": "0,0,0",
+          "blc": "-100,0,0",
+          "textures": [
+            {
+              "path": "Data/tex_tournesol2.jpg"
+            },
+            {
+              "path": "Data/tex_tournesol2bis.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sainte Famille avec saint Jean Baptiste et saint Francois d\"Assise",
+      "feature": "Data/003-022",
+      "models": [
+        {
+          "_comment": "t = top; b = bottom; l = left; r = right; c = corner",
+          "name": "Sainte carre centre 100",
+          "tlc": "0,100,0",
+          "trc": "100,100,0",
+          "brc": "100,0,0",
+          "blc": "0,0,0",
+          "textures": [
+            {
+              "path": "Data/003-022c1.png"
+            },
+            {
+              "path": "Data/003-022c2.png"
+            }
+          ]
+        },
+        {
+          "_comment": "t = top; b = bottom; l = left; r = right; c = corner",
+          "name": "Sainte carre decale 100",
+          "tlc": "-100,100,0",
+          "trc": "0,100,0",
+          "brc": "0,0,0",
+          "blc": "-100,0,0",
+          "textures": [
+            {
+              "path": "Data/003-022l1.png"
+            },
+            {
+              "path": "Data/003-022l2.png"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

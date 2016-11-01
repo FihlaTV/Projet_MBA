@@ -1,6 +1,7 @@
 package fr.norips.ar.ARMuseum.Drawable;
 
 import android.content.Context;
+import android.opengl.GLES20;
 import android.util.Log;
 
 import org.artoolkit.ar.base.rendering.RenderUtils;
@@ -9,7 +10,13 @@ import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by norips on 24/10/16.
@@ -23,10 +30,12 @@ public abstract class Rectangle implements ARDrawableOpenGLES20{
     protected ShaderProgram shaderProgram = null;
     protected Context context;
     protected int currentTexture;
+    protected static int nextTexture=0;
+    protected static BlockingDeque<Integer> stack = new LinkedBlockingDeque<Integer>();
     protected byte[] indices = {0,1,2,2,3,0};          //      0***1
                                                         //      *   *
                                                         //      3***2
-
+    private static boolean firstTime = true;
     protected float[] texCoords = {
             0,0, //Reverse axis Top left
             1,0, //Top right
@@ -81,7 +90,16 @@ public abstract class Rectangle implements ARDrawableOpenGLES20{
         mTexBuffer = RenderUtils.buildFloatBuffer(texCoords);
     }
 
-    public abstract void draw(float[] projectionMatrix, float[] modelViewMatrix);
+    public void draw(float[] projectionMatrix, float[] modelViewMatrix){
+        if(firstTime){
+            int textureUnit[] = new int[1];
+            GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_IMAGE_UNITS,textureUnit,0);
+            for(int i = 0; i < textureUnit[0];i++){
+                stack.addLast(i);
+            }
+        }
+        firstTime = false;
+    }
 
     public void nextTexture(){
         if(currentTexture >= pathToTextures.size()-1){

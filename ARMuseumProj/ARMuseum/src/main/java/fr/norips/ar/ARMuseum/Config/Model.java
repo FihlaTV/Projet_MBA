@@ -2,6 +2,7 @@ package fr.norips.ar.ARMuseum.Config;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
@@ -15,6 +16,7 @@ import fr.norips.ar.ARMuseum.Drawable.Rectangle;
  */
 
 public class Model {
+    private final static String TAG = "Model";
     private String name;
     private float pos[][] = new float[4][3];
     private Rectangle rect;
