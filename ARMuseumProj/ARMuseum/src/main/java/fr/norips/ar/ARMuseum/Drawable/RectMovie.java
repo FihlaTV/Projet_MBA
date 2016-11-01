@@ -77,37 +77,9 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
             GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
             shaderProgram.render(this.getmVertexBuffer(), this.getmTextureBuffer(), this.getmIndexBuffer());
         }
-//
-//        loadGLTexture();
-//        mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
-//        GLES20.glBindTexture(GL10.GL_TEXTURE_2D, textures[currentTexture]);
-//        //GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-//        // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-//        GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
-//
-//        shaderProgram.render(this.getmVertexBuffer(),this.getmTextureBuffer() , this.getmIndexBuffer());
 
     }
-//    public void draw(GL10 gl) {
-//        loadGLTexture(gl);
-//        gl.glEnable(GL10.GL_CULL_FACE);
-//        gl.glFrontFace(GL10.GL_CW);
-//
-//        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-//        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-//
-//        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mTexBuffer);
-//        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-//
-//        gl.glEnable(GL10.GL_TEXTURE_2D);
-//        gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
-//        gl.glDrawElements(GL10.GL_TRIANGLES, indices.length, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
-//        gl.glDisable(GL10.GL_TEXTURE_2D);
-//
-//        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-//        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-//        gl.glDisable(GL10.GL_CULL_FACE);
-//    }
+    
     private void init(Bitmap first) {
         //Generate a number of texture, texture pointer...
         textures = new int[1];
@@ -157,36 +129,6 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
 
         mMediaPlayer.start();
         finished = true;
-
-//        Bitmap bitmap = null;
-//        // Retrieve a bitmap
-//        bitmap = mRetriever.getFrameAtTime(currentPos*1000,MediaMetadataRetriever.OPTION_CLOSEST);
-//        if(init == false){
-//            Log.d("RectMovie","Lenms: " + lenMs);
-//            init(bitmap);
-//            return;
-//        }
-//        currentPos+=25; //Assuming 25 fps
-//        Log.d("RectMovie","Current pos: "+currentPos);
-//        if(currentPos>=lenMs){
-//            currentPos=0;
-//        }
-//        //...and bind it to our array
-//        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-//        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
-//        //Create Nearest Filtered Texture
-//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
-//
-//        //Different possible texture parameters, e.g. GL10.GL_CLAMP_TO_EDGE
-//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-//        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
-//
-//        //Use the Android GLUtils to specify a two-dimensional texture image from our bitmap
-//        GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap);
-//
-//        //Clean up
-//        bitmap = null;
     }
 
     @Override
