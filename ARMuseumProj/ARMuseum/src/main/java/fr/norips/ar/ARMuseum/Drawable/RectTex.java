@@ -9,6 +9,7 @@ import android.opengl.GLUtils;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -123,19 +124,7 @@ public class RectTex extends Rectangle{
      * @return Bitmap type
      */
     public static Bitmap getBitmapFromAsset(Context context, String filePath) {
-        AssetManager assetManager = context.getAssets();
-
-        InputStream istr;
-        Bitmap bitmap = null;
-        try {
-            istr = assetManager.open(filePath);
-            bitmap = BitmapFactory.decodeStream(istr);
-        } catch (IOException e) {
-            // handle exception
-            e.printStackTrace();
-        }
-
-        return bitmap;
+        return BitmapFactory.decodeFile(filePath);
     }
 }
 

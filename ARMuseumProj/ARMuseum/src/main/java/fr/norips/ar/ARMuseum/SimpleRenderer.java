@@ -53,6 +53,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.artoolkit.ar.base.ARToolKit;
@@ -62,9 +63,12 @@ import org.artoolkit.ar.base.rendering.gles20.LineGLES20;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -100,86 +104,10 @@ public class SimpleRenderer extends ARRendererGLES20 {
      * So this is the best spot to configure you assets for your AR app.
      * For example register used markers in here.
      */
+
     @Override
     public boolean configureARScene() {
-//        //Construction init, this will be done by a JSON Parser
-//        Canvas t = new Canvas("Pinball","Data/pinball");
-//        float[][] tab = {
-//                {0,100,0},
-//                {100,100,0},
-//                {100,0,0},
-//                {0,0,0},
-//        };
-//        ArrayList<String> tmp = new ArrayList<String>();
-//        tmp.add("Data/tex_pinball.png");
-//        tmp.add("Data/tex_pinball2.png");
-//        t.addModel(new Model("Sur tableau",tab,tmp,context));
-//
-//        Canvas tournesol = new Canvas("Tournesol","Data/tournesol");
-//        float[][] tabTournesol = {
-//                {0,100,0},
-//                {100,100,0},
-//                {100,0,0},
-//                {0,0,0},
-//        };
-//        ArrayList<String> tmpTournesol = new ArrayList<String>();
-//        tmpTournesol.add("Data/tex_tournesol.jpg");
-//        tmpTournesol.add("Data/tex_tournesolbis.jpg");
-//        tournesol.addModel(new Model("Sur tableau",tabTournesol,tmpTournesol,context));
-//
-//        Canvas tournesol2 = new Canvas("Tournesol2","Data/tournesol2");
-//        float[][] tabTournesol2 = {
-//                {0,100,0},
-//                {100,100,0},
-//                {100,0,0},
-//                {0,0,0},
-//        };
-//        ArrayList<String> tmpTournesol2 = new ArrayList<String>();
-//        tmpTournesol2.add("Data/tex_tournesol2.jpg");
-//        tmpTournesol2.add("Data/tex_tournesol2bis.jpg");
-//        tournesol2.addModel(new Model("Sur tableau",tabTournesol2,tmpTournesol2,context));
-//
-//        Canvas lettre = new Canvas("Lettre","Data/e102");
-//        float[][] tabLettre = {
-//                {0,100,0},
-//                {100,100,0},
-//                {100,0,0},
-//                {0,0,0},
-//        };
-//        tmp.clear();
-//        tmp.add("Data/e102Movie.mp4");
-//        rectMovie = new RectMovie(tabLettre,tmp,context);
-//        lettre.addModel(new Model("Sur tableaux",rectMovie));
-//        ArrayList<Canvas> tableaux = new ArrayList<Canvas>();
-//        tableaux.add(t);
-//        tableaux.add(tournesol);
-//        tableaux.add(tournesol2);
-//        tableaux.add(lettre);
-//        ConfigHolder.getInstance().init(tableaux);
-//        Log.d(TAG,"Threshold mode = " + ARToolKit.getInstance().getThresholdMode());
-        BufferedReader reader = null;
-        StringBuilder result = new StringBuilder();
-        try {
-            reader = new BufferedReader(
-                    new InputStreamReader(context.getAssets().open("Data/format.json"), "UTF-8"));
-
-            // do reading, usually loop until end of file reading
-            String mLine;
-            while ((mLine = reader.readLine()) != null) {
-                result.append(mLine);
-            }
-        } catch (IOException e) {
-            //log the exception
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    //log the exception
-                }
-            }
-        }
-        JSONParser json = new JSONParser(result.toString(),context);
+        JSONParser json = new JSONParser("http://192.168.1.75/format.json",context);
         json.createConfig();
         return true;
     }
