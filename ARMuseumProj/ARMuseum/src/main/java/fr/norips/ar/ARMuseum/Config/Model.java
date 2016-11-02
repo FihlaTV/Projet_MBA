@@ -2,7 +2,6 @@ package fr.norips.ar.ARMuseum.Config;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
@@ -20,6 +19,8 @@ public class Model {
     private String name;
     private float pos[][] = new float[4][3];
     private Rectangle rect;
+    private Context context;
+    private ArrayList<String> pathToTextures;
 
     /**
      *
@@ -39,8 +40,8 @@ public class Model {
             this.pos[i][1] = pos[i][1];
             this.pos[i][2] = pos[i][2];
         }
-        //TODO: Load texture on detection or on startup ?
-        rect = new RectTex(pos,pathToTextures,context);
+        this.context = context;
+        this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
 
     }
 
@@ -63,6 +64,11 @@ public class Model {
      */
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
         rect.draw(projectionMatrix,modelViewMatrix);
+    }
+
+    public void init(){
+        if(rect == null)
+            rect = new RectTex(pos,pathToTextures,context);
     }
 
     public void nextPage(){

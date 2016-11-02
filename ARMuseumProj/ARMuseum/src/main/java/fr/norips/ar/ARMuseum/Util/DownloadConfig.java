@@ -1,7 +1,6 @@
 package fr.norips.ar.ARMuseum.Util;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.File;
@@ -10,39 +9,40 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 /**
  * Created by norips on 01/11/16.
  */
 
-public class DownloadConfig extends AsyncTask<String, Integer, String> {
+public class DownloadConfig {
     private Context context;
-
+    private final static String TAG = "DownloadConfig";
     public DownloadConfig(Context context) {
         this.context = context;
     }
-
-    @Override
-    protected void onPostExecute(String result) {
-        if(result == null){
-            Log.d("DownloadConfig","File downloaded");
-        }
-    }
-    protected String downloadURL(String urlPath, String localPath) {
+    public boolean downloadURL(String urlPath, String localPath) {
         InputStream input = null;
         OutputStream output = null;
         HttpURLConnection connection = null;
         try {
             URL url = new URL(urlPath);
             connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
+            connection.setConnectTimeout(5000);
+            try {
+                connection.connect();
+            } catch (SocketTimeoutException e){
+                e.printStackTrace();
+                return false;
+            }
 
             // expect HTTP 200 OK, so we don't mistakenly save error report
             // instead of the file
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return "Server returned HTTP " + connection.getResponseCode()
-                        + " " + connection.getResponseMessage();
+                Log.d(TAG,"Server returned HTTP " + connection.getResponseCode()
+                        + " " + connection.getResponseMessage());
+                return false;
             }
 
             // this will be useful to display download percentage
@@ -59,15 +59,11 @@ public class DownloadConfig extends AsyncTask<String, Integer, String> {
             long total = 0;
             int count;
             while ((count = input.read(data)) != -1) {
-                // allow canceling with back button
-                if (isCancelled()) {
-                    input.close();
-                    return null;
-                }
                 output.write(data, 0, count);
             }
         } catch (Exception e) {
-            return e.toString();
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 if (output != null)
@@ -80,10 +76,6 @@ public class DownloadConfig extends AsyncTask<String, Integer, String> {
             if (connection != null)
                 connection.disconnect();
         }
-        return null;
-    }
-    @Override
-    protected String doInBackground(String... sUrl) {
-        return downloadURL(sUrl[0],sUrl[1]);
+        return true;
     }
 }

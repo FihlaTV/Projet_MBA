@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class Canvas {
     private String name;
+    private String pathToFeature;
     private int markerID;
     private ArrayList<Model> models;
 
@@ -24,8 +25,14 @@ public class Canvas {
      */
     public Canvas(String name, String pathToFeature, ArrayList<Model> models){
         this.name = name;
-        this.markerID = ARToolKit.getInstance().addMarker("nft;" + pathToFeature);
+        this.pathToFeature = pathToFeature;
         this.models = (ArrayList<Model>) models.clone();
+    }
+
+    public void init(){
+        this.markerID = ARToolKit.getInstance().addMarker("nft;" + pathToFeature);
+        for(Model m : models)
+            m.init();
     }
 
     /**
@@ -35,7 +42,7 @@ public class Canvas {
      */
     public Canvas(String name, String pathToFeature){
         this.name = name;
-        this.markerID = ARToolKit.getInstance().addMarker("nft;" + pathToFeature);
+        this.pathToFeature = pathToFeature;
         models = new ArrayList<Model>();
     }
 

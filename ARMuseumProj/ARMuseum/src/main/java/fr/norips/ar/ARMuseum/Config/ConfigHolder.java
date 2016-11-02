@@ -15,8 +15,11 @@ public class ConfigHolder {
     private static boolean finish = false;
     private static boolean first = true;
     private static ShaderProgram shaderProgram=null;
-    public void init(ArrayList<Canvas> targets){
+    synchronized public void init(ArrayList<Canvas> targets){
         this.targets = (ArrayList<Canvas>) targets.clone();
+        for(Canvas c : this.targets) {
+            c.init();
+        }
         finish = true;
     }
     private void initGL(){
@@ -28,7 +31,7 @@ public class ConfigHolder {
         this.shaderProgram = shaderProgram;
     }
 
-    public static ConfigHolder getInstance(){
+    synchronized public static ConfigHolder getInstance(){
         if (instance == null) instance = new ConfigHolder();
         return instance;
     }

@@ -51,11 +51,8 @@ package fr.norips.ar.ARMuseum;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.AsyncTask;
-import android.util.Log;
 
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
@@ -63,30 +60,18 @@ import org.artoolkit.ar.base.rendering.gles20.CubeGLES20;
 import org.artoolkit.ar.base.rendering.gles20.LineGLES20;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import fr.norips.ar.ARMuseum.Config.Canvas;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 import fr.norips.ar.ARMuseum.Config.JSONParser;
-import fr.norips.ar.ARMuseum.Config.Model;
-import fr.norips.ar.ARMuseum.Drawable.RectMovie;
 import fr.norips.ar.ARMuseum.Drawable.RectTex;
 import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
 import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
 import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
-import fr.norips.ar.ARMuseum.shaderMovie.FragmentShaderMovie;
-import fr.norips.ar.ARMuseum.shaderMovie.ShaderProgramMovie;
-import fr.norips.ar.ARMuseum.shaderMovie.VertexShaderMovie;
 
 /**
  * A very simple Renderer that adds a marker and draws a cube on it.
@@ -109,15 +94,14 @@ public class SimpleRenderer extends ARRendererGLES20 {
 
     @Override
     public boolean configureARScene() {
-        JSONParser json = new JSONParser("http://192.168.1.75/format.json",context);
-        json.createConfig();
-        return true;
+        JSONParser json = new JSONParser(context,pDialog);
+        boolean result = json.createConfig("http://192.168.1.75/format.json","http://norips.ddns.net/format.json");
+        return result;
     }
     public SimpleRenderer(Context cont, ProgressDialog dialog) {
         context = cont;
         pDialog = dialog;
     }
-//    private ShaderProgram shaderProgramMovie;
     //Shader calls should be within a GL thread that is onSurfaceChanged(), onSurfaceCreated() or onDrawFrame()
     //As the cube instantiates the shader during setShaderProgram call we need to create the cube here.
     @Override
@@ -125,7 +109,6 @@ public class SimpleRenderer extends ARRendererGLES20 {
         super.onSurfaceCreated(unused, config);
         ShaderProgram shaderProgram = new SimpleShaderProgram(new SimpleVertexShader(), new SimpleFragmentShader());
         ConfigHolder.getInstance().setShaderProgram(shaderProgram);
-//        shaderProgramMovie = new ShaderProgramMovie(new VertexShaderMovie(),new FragmentShaderMovie());
 
     }
 
@@ -134,10 +117,6 @@ public class SimpleRenderer extends ARRendererGLES20 {
      */
     @Override
     public void draw() {
-        if(pDialog!=null){
-            pDialog.dismiss();
-            pDialog = null;
-        }
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();
@@ -151,7 +130,6 @@ public class SimpleRenderer extends ARRendererGLES20 {
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glFrontFace(GLES20.GL_CW);
         ConfigHolder.getInstance().draw(projectionMatrix);
-//        rectMovie.setShaderProgram(shaderProgramMovie);
 
     }
 }

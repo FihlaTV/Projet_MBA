@@ -1,7 +1,6 @@
 package fr.norips.ar.ARMuseum.Drawable;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
@@ -9,9 +8,6 @@ import android.opengl.GLUtils;
 import android.os.Handler;
 import android.util.Log;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -39,14 +35,8 @@ public class RectTex extends Rectangle{
      * with possible changes in values.
      *
      */
-    private Handler handler = new Handler();
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-      /* do what you need to do */
-            reInitLoad();
-        }
-    };
+    private Handler handler = null;
+    Runnable runnable = null;
     private void reInitLoad(){
         for (int i = 0; i < pathToTextures.size(); i++)
             stack.addFirst(textureAct[i]);
@@ -54,10 +44,25 @@ public class RectTex extends Rectangle{
         finished = false;
     }
 
+    @Override
+    public void init(){
+        if(handler == null) {
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    reInitLoad();
+                    Log.d(TAG,"reInitLoad called");
+                }
+            };
+        }
+    }
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
-        //Time out
-        handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable,10000);
+        if(handler!=null) {
+            //Time out
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, 10000);
+        }
         super.draw(projectionMatrix,modelViewMatrix);
         GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
         shaderProgram.setProjectionMatrix(projectionMatrix);
@@ -83,7 +88,6 @@ public class RectTex extends Rectangle{
      * @param pathToTextures ArrayList of path to textures
      */
     public void loadGLTexture(Context context,ArrayList<String> pathToTextures) {
-
         //Generate a number of texture, texture pointer...
         textures = new int[pathToTextures.size()];
         textureAct = new int[pathToTextures.size()];

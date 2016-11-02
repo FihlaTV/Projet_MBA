@@ -1,25 +1,16 @@
 package fr.norips.ar.ARMuseum.Drawable;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.opengl.GLES20;
-import android.opengl.GLES30;
 import android.opengl.GLUtils;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
 
-import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
-
 import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.microedition.khronos.opengles.GL10;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
 

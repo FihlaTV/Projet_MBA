@@ -128,7 +128,7 @@ public class ARMuseumActivity extends ARActivity {
             return;
         }
 
-        pDialog = ProgressDialog.show(ARMuseumActivity.this,getResources().getString(R.string.loading_title),getResources().getString(R.string.loading_text),true);
+        pDialog = ProgressDialog.show(ARMuseumActivity.this,getResources().getString(R.string.loading_title),getResources().getString(R.string.loading_text),true,false);
 
     }
 

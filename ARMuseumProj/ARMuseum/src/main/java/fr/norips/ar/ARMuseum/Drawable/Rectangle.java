@@ -10,11 +10,7 @@ import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -73,6 +69,10 @@ public abstract class Rectangle implements ARDrawableOpenGLES20{
 
     public void setShaderProgram(ShaderProgram shaderProgram) {
         this.shaderProgram = shaderProgram;
+    }
+
+    public void init(){
+        ;
     }
     private void setArrays(float pos[][]) {
 
