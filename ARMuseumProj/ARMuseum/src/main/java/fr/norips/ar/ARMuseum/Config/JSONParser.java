@@ -15,7 +15,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import fr.norips.ar.ARMuseum.DownloadConfig;
+import fr.norips.ar.ARMuseum.Util.DownloadConfig;
+import fr.norips.ar.ARMuseum.Util.MD5;
 
 
 /**
@@ -65,8 +66,8 @@ public class JSONParser {
             for (int i = 0; i < canvas.length(); i++) {
                 JSONObject jO = canvas.getJSONObject(i);
                 String name = jO.getString("name");
-                String feature = jO.getString("feature");
-                String featureName = jO.getString("featureName");
+                JSONObject feature = jO.getJSONObject("feature");
+                String featureName = feature.getString("name");
                 File folder = new File(context.getExternalFilesDir(null) + "/" + featureName);
                 boolean success = true;
                 if (!folder.exists()) {
@@ -79,12 +80,25 @@ public class JSONParser {
                     Log.d(TAG,"Can't create folder");
                     // Do something else on failure
                 }
-                new DownloadConfig(context).execute(feature + ".iset", featureName + "/" + featureName + ".iset").get();
-                new DownloadConfig(context).execute(feature + ".fset", featureName + "/" + featureName + ".fset").get();
-                new DownloadConfig(context).execute(feature + ".fset3", featureName + "/" + featureName + ".fset3").get();
-                feature = context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + featureName;
+                JSONArray files = feature.getJSONArray("files");
+                for(int indFile = 0; indFile < files.length(); indFile++) {
+                    JSONObject file = files.getJSONObject(indFile);
+                    String filePath = file.getString("path");
+                    String fileMD5 = file.getString("MD5");
+                    String fileName = file.getString("name");
+                    File currFile = new File(context.getExternalFilesDir(null) + "/" + featureName + "/" + fileName);
+                    if(!currFile.exists()) {
+                        new DownloadConfig(context).execute(filePath, featureName + "/" + fileName).get();
+                    } else {
+                        if(!MD5.checkMD5(fileMD5,currFile)){
+                            new DownloadConfig(context).execute(filePath, featureName + "/" + fileName).get();
+                        }
+                    }
+                }
+
+                String localFeaturePath = context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + featureName;
                 //create new canvas
-                Canvas c = new Canvas(name, feature);
+                Canvas c = new Canvas(name, localFeaturePath);
                 JSONArray models = jO.getJSONArray("models");
                 for (int j = 0; j < models.length(); j++) {
                     JSONObject model = models.getJSONObject(j);
@@ -111,7 +125,15 @@ public class JSONParser {
                     for (int k = 0; k < textures.length(); k++) {
                         String textureName = textures.getJSONObject(k).getString("name");
                         String texturePath = textures.getJSONObject(k).getString("path");
-                        new DownloadConfig(context).execute(texturePath, featureName + "/" + textureName).get();
+                        String textureMD5 = textures.getJSONObject(k).getString("MD5");
+                        File currFile = new File(context.getExternalFilesDir(null) + "/" + featureName + "/" + textureName);
+                        if(!currFile.exists()) {
+                            new DownloadConfig(context).execute(texturePath, featureName + "/" + textureName).get();
+                        } else {
+                            if(!MD5.checkMD5(textureMD5,currFile)){
+                                new DownloadConfig(context).execute(texturePath, featureName + "/" + textureName).get();
+                            }
+                        }
                         pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
                     }
                     //Add model to canvas

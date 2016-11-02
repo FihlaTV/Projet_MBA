@@ -1,4 +1,4 @@
-package fr.norips.ar.ARMuseum;
+package fr.norips.ar.ARMuseum.Util;
 
 import android.content.Context;
 import android.os.AsyncTask;
