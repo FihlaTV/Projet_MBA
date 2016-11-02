@@ -50,6 +50,7 @@
 package fr.norips.ar.ARMuseum;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,6 +74,7 @@ import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 public class ARMuseumActivity extends ARActivity {
 
     private final static int REQUEST_READ = 1;
+    private ProgressDialog pDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls ARActivity's ctor, abstract class of ARBaseLib
@@ -126,6 +128,8 @@ public class ARMuseumActivity extends ARActivity {
             return;
         }
 
+        pDialog = ProgressDialog.show(ARMuseumActivity.this,getResources().getString(R.string.loading_title),getResources().getString(R.string.loading_text),true);
+
     }
 
     @Override
@@ -159,7 +163,7 @@ public class ARMuseumActivity extends ARActivity {
      */
     @Override
     protected ARRenderer supplyRenderer() {
-        return new SimpleRenderer(this.getBaseContext());
+        return new SimpleRenderer(this.getBaseContext(),pDialog);
     }
 
     /**

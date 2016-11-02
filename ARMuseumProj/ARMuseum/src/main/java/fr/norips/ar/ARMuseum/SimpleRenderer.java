@@ -49,6 +49,7 @@
 
 package fr.norips.ar.ARMuseum;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
@@ -99,6 +100,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
     private Context context;
     private float tmpMatrix[] = new float[16];
     private Rectangle rectMovie=null;
+    private ProgressDialog pDialog;
     /**
      * This method gets called from the framework to setup the ARScene.
      * So this is the best spot to configure you assets for your AR app.
@@ -111,8 +113,9 @@ public class SimpleRenderer extends ARRendererGLES20 {
         json.createConfig();
         return true;
     }
-    public SimpleRenderer(Context cont) {
+    public SimpleRenderer(Context cont, ProgressDialog dialog) {
         context = cont;
+        pDialog = dialog;
     }
 //    private ShaderProgram shaderProgramMovie;
     //Shader calls should be within a GL thread that is onSurfaceChanged(), onSurfaceCreated() or onDrawFrame()
@@ -131,6 +134,10 @@ public class SimpleRenderer extends ARRendererGLES20 {
      */
     @Override
     public void draw() {
+        if(pDialog!=null){
+            pDialog.dismiss();
+            pDialog = null;
+        }
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();

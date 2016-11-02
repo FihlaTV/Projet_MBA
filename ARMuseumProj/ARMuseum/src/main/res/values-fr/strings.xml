@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">ARMuseum</string>
     <string name="activity_name">ARMuseum</string>
-    <string name="loading_title">Loading config</string>
-    <string name="loading_text">Please wait while loading...</string>
+    <string name="loading_title">Chargement de la configuration</string>
+    <string name="loading_text">Veuillez patienter...</string>
 </resources>
