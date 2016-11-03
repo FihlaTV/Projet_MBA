@@ -33,7 +33,6 @@ public class DownloadConfig {
             try {
                 connection.connect();
             } catch (SocketTimeoutException e){
-                e.printStackTrace();
                 return false;
             }
 

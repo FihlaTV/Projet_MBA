@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import fr.norips.ARMuseum.R;
+import fr.norips.ar.ARMuseum.ARMuseumActivity;
 import fr.norips.ar.ARMuseum.Util.DownloadConfig;
 import fr.norips.ar.ARMuseum.Util.MD5;
 
@@ -35,8 +37,30 @@ public class JSONParser {
     public boolean createConfig(String... urls) {
         new AsyncTask<String,Integer,ArrayList<Canvas>>() {
             @Override
+            protected void onPreExecute(){
+                super.onPreExecute();
+                try {
+                    pDialog.setIndeterminate(false);
+                    pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    pDialog.setTitle(context.getResources().getString(R.string.loading_title));
+                    pDialog.setMessage(context.getResources().getString(R.string.loading_text));
+                    pDialog.setCancelable(false);
+                    pDialog.setMax(100);
+                    pDialog.show();
+                } catch (Exception e ){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                if (values.length == 2) {
+                    pDialog.setProgress(values[0]);
+                    pDialog.setMax(values[1]);
+                }
+            }
+            @Override
             protected void onPostExecute(ArrayList<Canvas> result){
-                Log.d(TAG,"onPostExecute");
+                super.onPostExecute(result);
                 ConfigHolder.getInstance().init(result);
                 pDialog.dismiss();
             }
@@ -160,8 +184,12 @@ public class JSONParser {
                                 pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
                             }
                             //Add model to canvas
+                            int progCanva = 100*i / canvas.length();
+                            int progModel = 100*(j+1) /models.length();
                             Model m = new Model(modelName, pos, pathToTextures, context);
                             c.addModel(m);
+                            publishProgress(progCanva + (progModel/canvas.length()),100);
+                            Log.d(TAG,"progress :" + (progCanva + (progModel/canvas.length())));
                         }
                         ALcanvas.add(c);
                     }

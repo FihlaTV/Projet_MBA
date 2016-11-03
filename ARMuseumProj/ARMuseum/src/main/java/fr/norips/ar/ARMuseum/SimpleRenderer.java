@@ -53,6 +53,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
@@ -117,7 +118,6 @@ public class SimpleRenderer extends ARRendererGLES20 {
      */
     @Override
     public void draw() {
-
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         float[] projectionMatrix = ARToolKit.getInstance().getProjectionMatrix();
         //Rotate matrix
@@ -132,4 +132,6 @@ public class SimpleRenderer extends ARRendererGLES20 {
         ConfigHolder.getInstance().draw(projectionMatrix);
 
     }
+
+
 }
