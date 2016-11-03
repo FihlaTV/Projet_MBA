@@ -16,6 +16,7 @@ public class Canvas {
     private String pathToFeature;
     private int markerID;
     private ArrayList<Model> models;
+    private ArrayList<Model> modelsMovie;
 
     /**
      *
@@ -27,6 +28,7 @@ public class Canvas {
         this.name = name;
         this.pathToFeature = pathToFeature;
         this.models = (ArrayList<Model>) models.clone();
+        modelsMovie = new ArrayList<Model>();
     }
 
     public void init(){
@@ -44,12 +46,17 @@ public class Canvas {
         this.name = name;
         this.pathToFeature = pathToFeature;
         models = new ArrayList<Model>();
+        modelsMovie = new ArrayList<Model>();
     }
 
 
-    public void initGL(ShaderProgram shaderProgram){
+    public void initGL(ShaderProgram shaderProgram,ShaderProgram shaderProgramMovie){
         for(Model m : models){
             m.initGL(shaderProgram);
+        }
+        for(Model m : modelsMovie){
+            if(shaderProgramMovie != null)
+                m.initGL(shaderProgramMovie);
         }
     }
     /**
@@ -66,6 +73,12 @@ public class Canvas {
      */
     public void addModel(Model model){
         models.add(model);
+    }
+
+    public void addModelMovie(Model model){
+        models.add(model);
+        modelsMovie.add(model);
+
     }
 
 

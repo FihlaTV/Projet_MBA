@@ -26,6 +26,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
     private boolean init = false;
     private long lenMs;
     private boolean finished = false;
+    private int textureAct;
 
     private int mTextureUniformHandle;
 
@@ -63,10 +64,8 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
                     updateSurface = false;
                 }
             }
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GL_TEXTURE_EXTERNAL_OES, mTextureID);
             mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
-            GLES20.glUniform1i(mTextureUniformHandle, currentTexture);
+            GLES20.glUniform1i(mTextureUniformHandle, textureAct);
             shaderProgram.render(this.getmVertexBuffer(), this.getmTextureBuffer(), this.getmIndexBuffer());
         }
 
@@ -75,8 +74,9 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
     private void init(Bitmap first) {
         //Generate a number of texture, texture pointer...
         textures = new int[1];
+        textureAct = stack.removeFirst();
         GLES20.glGenTextures(1, textures, 0);
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + textureAct);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, first,0);
         init = true;

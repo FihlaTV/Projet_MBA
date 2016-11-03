@@ -66,6 +66,7 @@ import org.artoolkit.ar.base.rendering.ARRenderer;
 
 import fr.norips.ARMuseum.R;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
+import fr.norips.ar.ARMuseum.Config.JSONParser;
 
 /**
  * A very simple example of extending ARActivity to create a new AR application.
@@ -73,8 +74,9 @@ import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 
 public class ARMuseumActivity extends ARActivity {
 
-    private final static int REQUEST_READ = 1;
+    private final static int REQUEST_WRITE = 1;
     private ProgressDialog pDialog;
+    public static boolean dismisspDialog = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls ARActivity's ctor, abstract class of ARBaseLib
@@ -99,25 +101,25 @@ public class ARMuseumActivity extends ARActivity {
             {
                 if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
                         this,
-                        Manifest.permission.CAMERA))
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 {
-                    if (this.shouldShowRequestPermissionRationale(Manifest.permission.CAMERA))
+                    if (this.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     {
                         // Will drop in here if user denied permissions access camera before.
                         // Or no uses-permission CAMERA element is in the
                         // manifest file. Must explain to the end user why the app wants
                         // permissions to the camera devices.
                         Toast.makeText(this.getApplicationContext(),
-                                "App requires access to camera to be granted",
+                                "App requires access to write external storage to be granted",
                                 Toast.LENGTH_SHORT).show();
                     }
                     // Request permission from the user to access the camera.
-                    Log.i(TAG, "CaptureCameraPreview(): must ask user for camera access permission");
+                    Log.i(TAG, "ARMuseumActivity(): must ask user for write external storage access permission");
                     this.requestPermissions(new String[]
                                     {
-                                            Manifest.permission.READ_EXTERNAL_STORAGE
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE
                                     },
-                            REQUEST_READ);
+                            REQUEST_WRITE);
                     return;
                 }
             }
@@ -127,8 +129,8 @@ public class ARMuseumActivity extends ARActivity {
             Log.e(TAG, "CaptureCameraPreview(): exception caught, " + ex.getMessage());
             return;
         }
-
         pDialog = new ProgressDialog(ARMuseumActivity.this);
+
 
     }
 
@@ -137,7 +139,7 @@ public class ARMuseumActivity extends ARActivity {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionsResult(): called");
-        if (requestCode == REQUEST_READ) {
+        if (requestCode == REQUEST_WRITE) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getApplicationContext(),
                         "Application will not run with folder access denied",
@@ -147,6 +149,9 @@ public class ARMuseumActivity extends ARActivity {
                 Toast.makeText(getApplicationContext(),
                         String.format("Reading file access permission \"%s\" allowed", permissions[0]),
                         Toast.LENGTH_SHORT).show();
+                pDialog = new ProgressDialog(ARMuseumActivity.this);
+                JSONParser json = new JSONParser(this.getApplicationContext(), pDialog);
+                boolean result = json.createConfig("http://192.168.1.75/format.json", "http://norips.ddns.net/format.json");
             }
             CaptureCameraPreview previewHook = getCameraPreview();
             if (null != previewHook) {
@@ -157,7 +162,12 @@ public class ARMuseumActivity extends ARActivity {
         else
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
+    @Override
+    synchronized public void onFrameProcessed() {
+        if(dismisspDialog){
+            pDialog.dismiss();
+        }
+    }
     /**
      * Provide our own SimpleRenderer.
      */

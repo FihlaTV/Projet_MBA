@@ -3,7 +3,9 @@ package fr.norips.ar.ARMuseum.Config;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 
 import fr.norips.ARMuseum.R;
 import fr.norips.ar.ARMuseum.ARMuseumActivity;
+import fr.norips.ar.ARMuseum.Drawable.RectMovie;
 import fr.norips.ar.ARMuseum.Util.DownloadConfig;
 import fr.norips.ar.ARMuseum.Util.MD5;
 
@@ -61,13 +64,18 @@ public class JSONParser {
             @Override
             protected void onPostExecute(ArrayList<Canvas> result){
                 super.onPostExecute(result);
-                ConfigHolder.getInstance().init(result);
-                pDialog.dismiss();
+                if(result != null) {
+                    ConfigHolder.getInstance().init(result);
+                } else {
+                    Toast.makeText(context,"Error while downloading file",Toast.LENGTH_LONG);
+                }
+                ARMuseumActivity.dismisspDialog = true;
             }
             @Override
             protected ArrayList<Canvas> doInBackground(String... urls) {
-                if(android.os.Debug.isDebuggerConnected())
-                    android.os.Debug.waitForDebugger();
+                float currentProgress = 0;
+                if(Debug.isDebuggerConnected())
+                    Debug.waitForDebugger();
                 JSONObject jObject;
                 DownloadConfig dc = new DownloadConfig(context);
                 try {
@@ -147,9 +155,11 @@ public class JSONParser {
                         //create new canvas
                         Canvas c = new Canvas(name, localFeaturePath);
                         JSONArray models = jO.getJSONArray("models");
+
                         for (int j = 0; j < models.length(); j++) {
                             JSONObject model = models.getJSONObject(j);
                             String modelName = model.getString("name");
+                            String modelType = model.getString("type");
                             float pos[][] = new float[4][3];
                             String tlc = model.getString("tlc");
                             String trc = model.getString("trc");
@@ -182,14 +192,23 @@ public class JSONParser {
                                     }
                                 }
                                 pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
+                                publishProgress((k+1)/textures.length() * 1/models.length() * (1/canvas.length()) * 100 , 100);
+                                float perCanva = 1.0f / canvas.length();
+                                float perModel = 1.0f / models.length();
+                                float perTexture = 1.0f/textures.length()* perCanva * perModel*100;
+                                currentProgress += perTexture;
+                                publishProgress((int)currentProgress,100);
                             }
                             //Add model to canvas
-                            int progCanva = 100*i / canvas.length();
-                            int progModel = 100*(j+1) /models.length();
-                            Model m = new Model(modelName, pos, pathToTextures, context);
-                            c.addModel(m);
-                            publishProgress(progCanva + (progModel/canvas.length()),100);
-                            Log.d(TAG,"progress :" + (progCanva + (progModel/canvas.length())));
+                            Model m;
+                            if(modelType.equalsIgnoreCase("video")) {
+                                m = new Model(modelName, new RectMovie(pos, pathToTextures, context));
+                                c.addModelMovie(m);
+                            } else {
+                                m = new Model(modelName, pos, pathToTextures, context);
+                                c.addModel(m);
+                            }
+
                         }
                         ALcanvas.add(c);
                     }

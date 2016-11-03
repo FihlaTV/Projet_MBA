@@ -73,6 +73,9 @@ import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
 import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
 import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
+import fr.norips.ar.ARMuseum.shaderMovie.FragmentShaderMovie;
+import fr.norips.ar.ARMuseum.shaderMovie.ShaderProgramMovie;
+import fr.norips.ar.ARMuseum.shaderMovie.VertexShaderMovie;
 
 /**
  * A very simple Renderer that adds a marker and draws a cube on it.
@@ -95,9 +98,12 @@ public class SimpleRenderer extends ARRendererGLES20 {
 
     @Override
     public boolean configureARScene() {
-        JSONParser json = new JSONParser(context,pDialog);
-        boolean result = json.createConfig("http://192.168.1.75/format.json","http://norips.ddns.net/format.json");
-        return result;
+        //Aka have access to file, else onRequestPermissionsResult while trigger it
+        if(pDialog != null) {
+            JSONParser json = new JSONParser(context, pDialog);
+            boolean result = json.createConfig("http://192.168.1.75/format.json", "http://norips.ddns.net/format.json");
+        }
+        return true;
     }
     public SimpleRenderer(Context cont, ProgressDialog dialog) {
         context = cont;
@@ -110,6 +116,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
         super.onSurfaceCreated(unused, config);
         ShaderProgram shaderProgram = new SimpleShaderProgram(new SimpleVertexShader(), new SimpleFragmentShader());
         ConfigHolder.getInstance().setShaderProgram(shaderProgram);
+        ConfigHolder.getInstance().setShaderProgramMovie(new ShaderProgramMovie(new VertexShaderMovie(),new FragmentShaderMovie()));
 
     }
 
