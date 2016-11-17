@@ -55,6 +55,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
 import org.artoolkit.ar.base.rendering.gles20.CubeGLES20;
@@ -82,14 +83,7 @@ import fr.norips.ar.ARMuseum.shaderMovie.VertexShaderMovie;
  */
 public class SimpleRenderer extends ARRendererGLES20 {
     private final static String TAG = "SimpleRenderer";
-    private int markerID = -1;
-    private CubeGLES20 cube;
-    private ArrayList<LineGLES20> lines = new ArrayList<LineGLES20>();
-    private RectTex rect;
-    private Context context;
     private float tmpMatrix[] = new float[16];
-    private Rectangle rectMovie=null;
-    private ProgressDialog pDialog;
     /**
      * This method gets called from the framework to setup the ARScene.
      * So this is the best spot to configure you assets for your AR app.
@@ -99,15 +93,9 @@ public class SimpleRenderer extends ARRendererGLES20 {
     @Override
     public boolean configureARScene() {
         //Aka have access to file, else onRequestPermissionsResult while trigger it
-        if(pDialog != null) {
-            JSONParser json = new JSONParser(context, pDialog);
-            boolean result = json.createConfig("http://192.168.1.75/format.json", "http://norips.ddns.net/format.json");
-        }
+        ConfigHolder.getInstance().init();
+        ARMuseumActivity.dismisspDialog = true;
         return true;
-    }
-    public SimpleRenderer(Context cont, ProgressDialog dialog) {
-        context = cont;
-        pDialog = dialog;
     }
     //Shader calls should be within a GL thread that is onSurfaceChanged(), onSurfaceCreated() or onDrawFrame()
     //As the cube instantiates the shader during setShaderProgram call we need to create the cube here.

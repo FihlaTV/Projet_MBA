@@ -16,8 +16,8 @@ public class ConfigHolder {
     private static boolean first = true;
     private static ShaderProgram shaderProgram=null;
     private static ShaderProgram shaderProgramMovie=null;
-    synchronized public void init(ArrayList<Canvas> targets){
-        this.targets = (ArrayList<Canvas>) targets.clone();
+
+    synchronized public void init(){
         for(Canvas c : this.targets) {
             c.init();
         }
@@ -27,6 +27,10 @@ public class ConfigHolder {
         for (Canvas c : targets){
             c.initGL(shaderProgram,shaderProgramMovie);
         }
+    }
+
+    public void load(ArrayList<Canvas> targets){
+        this.targets = (ArrayList<Canvas>) targets.clone();
     }
     public void setShaderProgram(ShaderProgram shaderProgram){
         this.shaderProgram = shaderProgram;

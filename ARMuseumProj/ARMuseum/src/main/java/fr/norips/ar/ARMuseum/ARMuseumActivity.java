@@ -74,7 +74,6 @@ import fr.norips.ar.ARMuseum.Config.JSONParser;
 
 public class ARMuseumActivity extends ARActivity {
 
-    private final static int REQUEST_WRITE = 1;
     private ProgressDialog pDialog;
     public static boolean dismisspDialog = false;
     @Override
@@ -83,9 +82,7 @@ public class ARMuseumActivity extends ARActivity {
         setContentView(R.layout.main);
         FrameLayout f = (FrameLayout) findViewById(R.id.mainLayout);
         f.setOnTouchListener(new OnSwipeTouchListener(ARMuseumActivity.this){
-            public void onSwipeTop() {
-                Toast.makeText(ARMuseumActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
+            public void onSwipeTop() { }
             public void onSwipeRight() {
                 ConfigHolder.getInstance().nextPage();
             }
@@ -95,77 +92,21 @@ public class ARMuseumActivity extends ARActivity {
             public void onSwipeBottom() {
             }
         });
-        try
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-                if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                {
-                    if (this.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                    {
-                        // Will drop in here if user denied permissions access camera before.
-                        // Or no uses-permission CAMERA element is in the
-                        // manifest file. Must explain to the end user why the app wants
-                        // permissions to the camera devices.
-                        Toast.makeText(this.getApplicationContext(),
-                                "App requires access to write external storage to be granted",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    // Request permission from the user to access the camera.
-                    Log.i(TAG, "ARMuseumActivity(): must ask user for write external storage access permission");
-                    this.requestPermissions(new String[]
-                                    {
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                    },
-                            REQUEST_WRITE);
-                    return;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.e(TAG, "CaptureCameraPreview(): exception caught, " + ex.getMessage());
-            return;
-        }
+
         pDialog = new ProgressDialog(ARMuseumActivity.this);
-
+        pDialog.setMessage(getResources().getString(R.string.loading_text));
+        pDialog.setTitle(getResources().getString(R.string.loading_title));
+        pDialog.setIndeterminate(true);
+        pDialog.show();
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionsResult(): called");
-        if (requestCode == REQUEST_WRITE) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(),
-                        "Application will not run with folder access denied",
-                        Toast.LENGTH_LONG).show();
-            }
-            else if (1 <= permissions.length) {
-                Toast.makeText(getApplicationContext(),
-                        String.format("Reading file access permission \"%s\" allowed", permissions[0]),
-                        Toast.LENGTH_SHORT).show();
-                pDialog = new ProgressDialog(ARMuseumActivity.this);
-                JSONParser json = new JSONParser(this.getApplicationContext(), pDialog);
-                boolean result = json.createConfig("http://192.168.1.75/format.json", "http://norips.ddns.net/format.json");
-            }
-            CaptureCameraPreview previewHook = getCameraPreview();
-            if (null != previewHook) {
-                Log.i(TAG, "onRequestPermissionsResult(): reset ask for cam access perm");
-                previewHook.resetGettingCameraAccessPermissionsFromUserState();
-            }
-        }
-        else
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+
     @Override
     synchronized public void onFrameProcessed() {
-        if(dismisspDialog){
+        if(pDialog != null && dismisspDialog){
             pDialog.dismiss();
+            pDialog = null;
         }
     }
     /**
@@ -173,7 +114,7 @@ public class ARMuseumActivity extends ARActivity {
      */
     @Override
     protected ARRenderer supplyRenderer() {
-        return new SimpleRenderer(this.getBaseContext(),pDialog);
+        return new SimpleRenderer();
     }
 
     /**

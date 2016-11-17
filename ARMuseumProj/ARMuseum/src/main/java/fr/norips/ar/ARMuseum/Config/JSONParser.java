@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Debug;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -31,45 +32,24 @@ import fr.norips.ar.ARMuseum.Util.MD5;
 public class JSONParser {
     private Context context;
     private static final String TAG = "JSONParser";
-    private ProgressDialog pDialog;
-    public JSONParser(Context context, ProgressDialog p) {
+    private Button button = null;
+    public JSONParser(Context context, Button b) {
         this.context = context;
-        pDialog = p;
+        button = b;
     }
-
+    //TODO Add warning when createConfig take too long time
     public boolean createConfig(String... urls) {
         new AsyncTask<String,Integer,ArrayList<Canvas>>() {
-            @Override
-            protected void onPreExecute(){
-                super.onPreExecute();
-                try {
-                    pDialog.setIndeterminate(false);
-                    pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    pDialog.setTitle(context.getResources().getString(R.string.loading_title));
-                    pDialog.setMessage(context.getResources().getString(R.string.loading_text));
-                    pDialog.setCancelable(false);
-                    pDialog.setMax(100);
-                    pDialog.show();
-                } catch (Exception e ){
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            protected void onProgressUpdate(Integer... values) {
-                if (values.length == 2) {
-                    pDialog.setProgress(values[0]);
-                    pDialog.setMax(values[1]);
-                }
-            }
             @Override
             protected void onPostExecute(ArrayList<Canvas> result){
                 super.onPostExecute(result);
                 if(result != null) {
-                    ConfigHolder.getInstance().init(result);
+                    ConfigHolder.getInstance().load(result);
+                    button.setEnabled(true);
+                    Log.d(TAG,"Button enabled");
                 } else {
                     Toast.makeText(context,"Error while downloading file",Toast.LENGTH_LONG);
                 }
-                ARMuseumActivity.dismisspDialog = true;
             }
             @Override
             protected ArrayList<Canvas> doInBackground(String... urls) {
