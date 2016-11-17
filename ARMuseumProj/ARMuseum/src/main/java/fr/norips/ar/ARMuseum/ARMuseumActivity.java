@@ -64,7 +64,7 @@ import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.camera.CaptureCameraPreview;
 import org.artoolkit.ar.base.rendering.ARRenderer;
 
-import fr.norips.ARMuseum.R;
+import fr.norips.ar.ARMuseum.R;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
 import fr.norips.ar.ARMuseum.Config.JSONParser;
 

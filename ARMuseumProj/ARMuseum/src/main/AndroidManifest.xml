@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.norips.ARMuseum"
+    package="fr.norips.ar.ARMuseum"
     android:versionCode="50000"
     android:versionName="5.0">
 
@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-feature
         android:name="android.hardware.camera"
@@ -35,11 +36,15 @@
             android:name="fr.norips.ar.ARMuseum.ARMuseumActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/activity_name">
+        </activity>
+        <activity android:name="org.artoolkit.ar.base.camera.CameraPreferencesActivity" />
+        <activity android:name="fr.norips.ar.ARMuseum.Presentation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.artoolkit.ar.base.camera.CameraPreferencesActivity"></activity>
     </application>
+
 </manifest>

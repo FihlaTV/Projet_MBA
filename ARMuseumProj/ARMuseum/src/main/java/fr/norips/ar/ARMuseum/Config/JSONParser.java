@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import fr.norips.ARMuseum.R;
+import fr.norips.ar.ARMuseum.R;
 import fr.norips.ar.ARMuseum.ARMuseumActivity;
 import fr.norips.ar.ARMuseum.Drawable.RectMovie;
 import fr.norips.ar.ARMuseum.Util.DownloadConfig;
