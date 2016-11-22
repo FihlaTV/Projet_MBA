@@ -40,6 +40,19 @@ public class JSONParser {
     //TODO Add warning when createConfig take too long time
     public boolean createConfig(String... urls) {
         new AsyncTask<String,Integer,ArrayList<Canvas>>() {
+            private boolean checkAndDownload(File currFile,DownloadConfig dc,boolean connected,String filePath,String fileName,String fileMD5){
+                if (!currFile.exists()) {
+                    if(connected)
+                        return dc.downloadURL(filePath,fileName);
+                    else
+                        return false;
+                } else {
+                    if (!MD5.checkMD5(fileMD5, currFile))
+                        if(connected)
+                            return dc.downloadURL(filePath,fileName);
+                    return true;
+                }
+            }
             @Override
             protected void onPostExecute(ArrayList<Canvas> result){
                 super.onPostExecute(result);
@@ -48,7 +61,7 @@ public class JSONParser {
                     button.setEnabled(true);
                     Log.d(TAG,"Button enabled");
                 } else {
-                    Toast.makeText(context,"Error while downloading file",Toast.LENGTH_LONG);
+                    Toast.makeText(context,"Error while downloading file or loading cache",Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -66,9 +79,9 @@ public class JSONParser {
                             break;
                         }
                     }
-                    if (!connected)
-                        return null;
-
+                    if (!connected) { //Go offline
+                        Log.d(TAG,"f");
+                    }
                     BufferedReader reader = null;
                     StringBuilder result = new StringBuilder();
                     try {
@@ -80,9 +93,10 @@ public class JSONParser {
                         while ((mLine = reader.readLine()) != null) {
                             result.append(mLine);
                         }
-                    } catch (IOException e) {
+                    } catch (IOException e) { //Can't open file
                         //log the exception
                         e.printStackTrace();
+                        return null; //Abort
                     } finally {
                         if (reader != null) {
                             try {
@@ -113,23 +127,20 @@ public class JSONParser {
                         } else {
                             Log.d(TAG, "Can't create folder");
                             return null;
-                            // Do something else on failure
                         }
                         JSONArray files = feature.getJSONArray("files");
+                        boolean error = false;
                         for (int indFile = 0; indFile < files.length(); indFile++) {
                             JSONObject file = files.getJSONObject(indFile);
                             String filePath = file.getString("path");
                             String fileMD5 = file.getString("MD5");
                             String fileName = file.getString("name");
                             File currFile = new File(context.getExternalFilesDir(null) + "/" + featureName + "/" + fileName);
-                            if (!currFile.exists()) {
-                                dc.downloadURL(filePath, featureName + "/" + fileName);
-                            } else {
-                                if (!MD5.checkMD5(fileMD5, currFile)) {
-                                    dc.downloadURL(filePath, featureName + "/" + fileName);
-                                }
-                            }
+                            if( ! checkAndDownload(currFile,dc,connected,filePath,featureName + "/" + fileName,fileMD5))
+                                error = true;
                         }
+                        if(error) //Go to next canvas, there is one or more missing files
+                            continue;
 
                         String localFeaturePath = context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + featureName;
                         //create new canvas
@@ -164,13 +175,12 @@ public class JSONParser {
                                 String texturePath = textures.getJSONObject(k).getString("path");
                                 String textureMD5 = textures.getJSONObject(k).getString("MD5");
                                 File currFile = new File(context.getExternalFilesDir(null) + "/" + featureName + "/" + textureName);
-                                if (!currFile.exists()) {
-                                    dc.downloadURL(texturePath, featureName + "/" + textureName);
-                                } else {
-                                    if (!MD5.checkMD5(textureMD5, currFile)) {
-                                        dc.downloadURL(texturePath, featureName + "/" + textureName);
-                                    }
+
+                                if( ! checkAndDownload(currFile,dc,connected,texturePath,featureName + "/" + textureName,textureMD5)){
+                                    continue;
+                                    //TODO check for return
                                 }
+
                                 pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
                                 publishProgress((k+1)/textures.length() * 1/models.length() * (1/canvas.length()) * 100 , 100);
                                 float perCanva = 1.0f / canvas.length();

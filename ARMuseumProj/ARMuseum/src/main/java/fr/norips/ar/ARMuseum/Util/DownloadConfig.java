@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
@@ -29,10 +30,10 @@ public class DownloadConfig {
         try {
             URL url = new URL(urlPath);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(5000);
+            connection.setConnectTimeout(1000);
             try {
                 connection.connect();
-            } catch (SocketTimeoutException e){
+            } catch (SocketException e){
                 return false;
             }
 
