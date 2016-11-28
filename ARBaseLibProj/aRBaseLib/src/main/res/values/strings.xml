@@ -5,12 +5,12 @@
     <string name="prefCategory_title_camera">Camera settings</string>
     <string name="pref_title_cameraResolution">Camera resolution</string>
     <string-array name="pref_entries_cameraResolution">
-        <item>320x240   (4:3)</item>
+        <item>1280x960   (4:3)</item>
     </string-array>
     <string-array name="pref_entryValues_cameraResolution">
-        <item>320x240</item>
+        <item>1280x960</item>
     </string-array>
-    <string name="pref_defaultValue_cameraResolution">320x240</string>
+    <string name="pref_defaultValue_cameraResolution">1280x960</string>
 
     <string name="pref_title_cameraIndex">Change camera</string>
     <string-array name="pref_entries_cameraIndex">

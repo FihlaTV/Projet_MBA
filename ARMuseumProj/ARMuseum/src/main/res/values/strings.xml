@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ARSimple</string>
-    <string name="activity_name">ARSimpleActivity</string>
+    <string name="app_name">ARMuseum</string>
+    <string name="next">Next</string>
+    <string name="activity_name">ARMuseum</string>
+    <string name="loading_title">Loading config</string>
+    <string name="loading_text">Please wait while loading...</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris convallis volutpat turpis feugiat aliquet. Vivamus condimentum id odio vel tempor. Phasellus feugiat facilisis mattis. Praesent at aliquam diam, at commodo dolor. Donec sed nulla ac urna mattis cursus eget et mi. Aliquam commodo risus nec tortor placerat, at dictum leo pellentesque. Nunc tortor ligula, iaculis eu diam ac, pharetra bibendum est. Aliquam molestie interdum pulvinar. Nullam tincidunt enim enim, non commodo nibh malesuada a. Sed placerat finibus diam quis facilisis. Maecenas quis iaculis est. Cras commodo, enim sed suscipit consectetur, enim est interdum dui, vitae rutrum lacus felis vitae lectus. Aliquam pellentesque et risus in posuere. Sed dictum ac turpis vestibulum facilisis. Nullam quam massa, volutpat sed hendrerit eu, molestie ut ipsum.
+
+Vivamus urna justo, scelerisque nec consequat quis, blandit eget turpis. Mauris pellentesque, leo non rutrum pellentesque, nibh quam vestibulum sapien, vel pharetra felis massa ac ligula. Maecenas mollis nulla vel bibendum aliquam. Etiam felis magna, rutrum vel turpis sollicitudin, vulputate maximus libero. Nullam nec faucibus dolor. Integer at eros eget eros hendrerit tempor quis non nisl. Curabitur faucibus neque at ultricies eleifend. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque et fringilla dolor. Sed consectetur, velit vehicula gravida consequat, ligula tellus interdum purus, vitae tincidunt lacus dolor in ante.
+
+Phasellus euismod urna ut justo efficitur, id hendrerit ipsum commodo. Praesent a massa odio. Aliquam eget posuere augue. Vestibulum malesuada, nulla in pharetra congue, erat augue scelerisque urna, a ultrices diam orci ut urna. Sed varius magna id diam dapibus, at hendrerit velit placerat. Mauris dapibus turpis eu finibus pharetra. Duis venenatis blandit tellus eget commodo. Aliquam erat volutpat. Phasellus dignissim dolor eu odio elementum cursus. Donec pharetra nisl purus, quis semper quam dapibus id. Maecenas molestie augue a nulla ornare commodo. Nulla volutpat mollis turpis nec congue. Aliquam ac dignissim diam.
+
+Morbi urna risus, convallis in nibh nec, maximus varius nulla. Cras imperdiet tortor sed lacus gravida hendrerit. Nam elit nisl, interdum et velit ut, auctor condimentum justo. Phasellus gravida turpis orci, ac ullamcorper nisi porta at. Maecenas eleifend diam id tempus bibendum. Phasellus porttitor lacinia semper. Pellentesque consectetur purus in eros vestibulum, et auctor mi vehicula. Donec id erat vehicula, aliquam nisi id, mollis libero.
+
+Nam consequat, nibh vitae auctor pellentesque, urna neque gravida lacus, varius condimentum ligula magna nec purus. Etiam vehicula aliquam aliquet. Aliquam erat volutpat. Nullam venenatis nisl et malesuada luctus. Aliquam lacinia eget tellus non varius. Vestibulum condimentum ex ex, id elementum metus molestie faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In porttitor est ut ipsum consequat feugiat. In ultricies nulla sem, sit amet viverra ante mollis vel. Etiam rutrum nisi ut dui feugiat congue.</string>
 </resources>

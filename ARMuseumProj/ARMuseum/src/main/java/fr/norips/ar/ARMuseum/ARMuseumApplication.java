@@ -56,8 +56,6 @@ package fr.norips.ar.ARMuseum;
 import android.app.Application;
 import android.content.Context;
 
-import org.artoolkit.ar.base.assets.AssetHelper;
-
 public class ARMuseumApplication extends Application {
 
     private static Application sInstance;
@@ -89,7 +87,5 @@ public class ARMuseumApplication extends Application {
         // Unpack assets to cache directory so native library can read them.
         // N.B.: If contents of assets folder changes, be sure to increment the
         // versionCode integer in the modules build.gradle file.
-        AssetHelper assetHelper = new AssetHelper(getAssets());
-        assetHelper.cacheAssetFolder(getInstance(), "Data");
     }
 }

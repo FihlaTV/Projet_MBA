@@ -278,6 +278,24 @@ public class ARToolKit {
     }
 
     /**
+     * Sets the threshold mode used to binarize the video image for marker detection.
+     * @param mode can be one of this from NativeInterface
+     *              AR_LABELING_THRESH_MODE_MANUAL
+                    AR_LABELING_THRESH_MODE_AUTO_MEDIAN
+                    AR_LABELING_THRESH_MODE_AUTO_OTSU
+                    AR_LABELING_THRESH_MODE_AUTO_ADAPTIVE
+                    AR_LABELING_THRESH_MODE_AUTO_BRACKETING
+     */
+    public void setThresholdMode(int mode) {
+        if (!initedNative) return;
+        NativeInterface.arwSetVideoThresholdMode(mode);
+    }
+
+    public int getThresholdMode() {
+        if (!initedNative) return -1;
+        return NativeInterface.arwGetVideoThresholdMode();
+    }
+    /**
      * Returns the projection matrix calculated from camera parameters.
      *
      * @return Projection matrix as an array of floats in OpenGL style.

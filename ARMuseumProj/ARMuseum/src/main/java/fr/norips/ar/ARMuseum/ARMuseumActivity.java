@@ -49,31 +49,40 @@
 
 package fr.norips.ar.ARMuseum;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-
-import fr.norips.ARMuseum.R;
-import fr.norips.ar.ARMuseum.Config.ConfigHolder;
-
 import org.artoolkit.ar.base.ARActivity;
+import org.artoolkit.ar.base.camera.CaptureCameraPreview;
 import org.artoolkit.ar.base.rendering.ARRenderer;
+
+import fr.norips.ar.ARMuseum.R;
+import fr.norips.ar.ARMuseum.Config.ConfigHolder;
+import fr.norips.ar.ARMuseum.Config.JSONParser;
 
 /**
  * A very simple example of extending ARActivity to create a new AR application.
  */
+
 public class ARMuseumActivity extends ARActivity {
 
+    private ProgressDialog pDialog;
+    public static boolean dismisspDialog = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls ARActivity's ctor, abstract class of ARBaseLib
         setContentView(R.layout.main);
         FrameLayout f = (FrameLayout) findViewById(R.id.mainLayout);
         f.setOnTouchListener(new OnSwipeTouchListener(ARMuseumActivity.this){
-            public void onSwipeTop() {
-                Toast.makeText(ARMuseumActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
+            public void onSwipeTop() { }
             public void onSwipeRight() {
                 ConfigHolder.getInstance().nextPage();
             }
@@ -84,14 +93,28 @@ public class ARMuseumActivity extends ARActivity {
             }
         });
 
+        pDialog = new ProgressDialog(ARMuseumActivity.this);
+        pDialog.setMessage(getResources().getString(R.string.loading_text));
+        pDialog.setTitle(getResources().getString(R.string.loading_title));
+        pDialog.setIndeterminate(true);
+        pDialog.show();
+
     }
 
+
+    @Override
+    synchronized public void onFrameProcessed() {
+        if(pDialog != null && dismisspDialog){
+            pDialog.dismiss();
+            pDialog = null;
+        }
+    }
     /**
      * Provide our own SimpleRenderer.
      */
     @Override
     protected ARRenderer supplyRenderer() {
-        return new SimpleRenderer(this.getBaseContext());
+        return new SimpleRenderer();
     }
 
     /**

@@ -277,7 +277,7 @@ public abstract class ARActivity extends /*AppCompat*/Activity implements Camera
 
         Point windowSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(windowSize);
-        // Assumes landscape orientation
+        // Assumes landscape orientation //TODO: Auto rotate
         float aspectRatio = 4.0f / 3.f;
         int height = windowSize.y;
         int width = Math.round(height * aspectRatio);
