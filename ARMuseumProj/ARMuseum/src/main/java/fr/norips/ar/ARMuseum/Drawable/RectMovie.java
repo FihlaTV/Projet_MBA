@@ -12,14 +12,12 @@ import android.view.Surface;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import wseemann.media.FFmpegMediaMetadataRetriever;
 
 /**
  * Created by norips on 24/10/16.
  */
 
 public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvailableListener{
-    private FFmpegMediaMetadataRetriever mRetriever;
     private String TAG = "RectMovie";
     private int textures[];
     private long currentPos=0;
@@ -32,13 +30,6 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
 
     public RectMovie(float pos[][], ArrayList<String> pathToTextures, Context context) {
         super(pos,pathToTextures,context);
-        mRetriever = new FFmpegMediaMetadataRetriever();
-        //AssetManager assetManager = context.getAssets();
-            //final AssetFileDescriptor fd = context.getAssets().openFd(pathToTextures.get(0));
-        mRetriever.setDataSource(pathToTextures.get(0));
-        String lengthMsStr = mRetriever
-                .extractMetadata(mRetriever.METADATA_KEY_DURATION);
-        lenMs = Long.parseLong(lengthMsStr);
         mMediaPlayer = new MediaPlayer();
         try {
             mMediaPlayer.setDataSource(pathToTextures.get(0));
