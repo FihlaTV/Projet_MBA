@@ -20,9 +20,6 @@ import java.util.ArrayList;
 public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvailableListener{
     private String TAG = "RectMovie";
     private int textures[];
-    private long currentPos=0;
-    private boolean init = false;
-    private long lenMs;
     private boolean finished = false;
     private int textureAct;
 
@@ -70,7 +67,6 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + textureAct);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, first,0);
-        init = true;
 
     }
     private int mTextureID = -1;

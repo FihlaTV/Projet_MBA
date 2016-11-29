@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 
 public class Canvas {
-    private String name;
     private String pathToFeature;
     private int markerID;
     private ArrayList<Model> models;
@@ -25,7 +24,6 @@ public class Canvas {
      * @param models An ArrayList of your models
      */
     public Canvas(String name, String pathToFeature, ArrayList<Model> models){
-        this.name = name;
         this.pathToFeature = pathToFeature;
         this.models = (ArrayList<Model>) models.clone();
         modelsMovie = new ArrayList<Model>();
@@ -43,7 +41,6 @@ public class Canvas {
      * @param pathToFeature Path to feature folder (folder containing iset,fset and fset3 file
      */
     public Canvas(String name, String pathToFeature){
-        this.name = name;
         this.pathToFeature = pathToFeature;
         models = new ArrayList<Model>();
         modelsMovie = new ArrayList<Model>();

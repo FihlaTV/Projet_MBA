@@ -16,7 +16,6 @@ import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 
 public class Model {
     private final static String TAG = "Model";
-    private String name;
     private float pos[][] = new float[4][3];
     private Rectangle rect;
     private Context context;
@@ -34,7 +33,6 @@ public class Model {
      * @param context Context activity to load from assets folder
      */
     public Model(String name, float pos[][], ArrayList<String> pathToTextures,Context context){
-        this.name = name;
         for(int i = 0; i < 4;i++){
             this.pos[i][0] = pos[i][0];
             this.pos[i][1] = pos[i][1];
@@ -46,7 +44,6 @@ public class Model {
     }
 
     public Model(String name, Rectangle rect){
-        this.name = name;
         for(int i = 0; i < 4;i++){
             this.pos[i][0] = pos[i][0];
             this.pos[i][1] = pos[i][1];
