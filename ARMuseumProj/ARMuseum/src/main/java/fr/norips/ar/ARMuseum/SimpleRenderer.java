@@ -49,28 +49,17 @@
 
 package fr.norips.ar.ARMuseum;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
-import org.artoolkit.ar.base.ARActivity;
 import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
-import org.artoolkit.ar.base.rendering.gles20.CubeGLES20;
-import org.artoolkit.ar.base.rendering.gles20.LineGLES20;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
-
-import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
-import fr.norips.ar.ARMuseum.Config.JSONParser;
-import fr.norips.ar.ARMuseum.Drawable.RectTex;
-import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
 import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
 import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;

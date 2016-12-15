@@ -11,6 +11,7 @@ import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -18,11 +19,11 @@ import java.util.concurrent.LinkedBlockingDeque;
  * Created by norips on 24/10/16.
  */
 
-public abstract class Rectangle implements ARDrawableOpenGLES20{
+public abstract class Rectangle implements Drawable {
     protected FloatBuffer mVertexBuffer;
     protected FloatBuffer mTexBuffer;
     protected ByteBuffer mIndexBuffer;
-    protected ArrayList<String> pathToTextures;
+    protected List<String> pathToTextures;
     protected ShaderProgram shaderProgram = null;
     protected Context context;
     protected int currentTexture;
@@ -48,9 +49,9 @@ public abstract class Rectangle implements ARDrawableOpenGLES20{
      * @param pathToTextures An ArrayList<String> containing paths to your texture
      *
      */
-    public Rectangle(float pos[][], ArrayList<String> pathToTextures, Context context) {
+    public Rectangle(float pos[][], List<String> pathToTextures, Context context) {
         setArrays(pos);
-        this.pathToTextures = (ArrayList<String>) pathToTextures.clone();
+        this.pathToTextures = new ArrayList<String>(pathToTextures);
         this.context = context;
         currentTexture = 0;
     }

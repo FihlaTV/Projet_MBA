@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -16,13 +17,13 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by norips on 20/10/16.
  */
 
-public class RectTex extends Rectangle{
+public class RectTex extends Rectangle {
     private final static String TAG = "RectTex";
     private boolean finished = false;
     private int[] textures = null;
     private int[] textureAct = null;
 
-    public RectTex(float pos[][],ArrayList<String> pathToTextures,Context context) {
+    public RectTex(float pos[][], List<String> pathToTextures, Context context) {
         super(pos,pathToTextures,context);
     }
     /** This will be used to pass in the texture. */
@@ -87,7 +88,7 @@ public class RectTex extends Rectangle{
      * @param context - The Activity context
      * @param pathToTextures ArrayList of path to textures
      */
-    public void loadGLTexture(Context context,ArrayList<String> pathToTextures) {
+    public void loadGLTexture(Context context,List<String> pathToTextures) {
         //Generate a number of texture, texture pointer...
         textures = new int[pathToTextures.size()];
         textureAct = new int[pathToTextures.size()];

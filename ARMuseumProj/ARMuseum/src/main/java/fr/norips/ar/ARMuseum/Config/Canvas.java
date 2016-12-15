@@ -6,6 +6,7 @@ import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by norips on 20/10/16.
@@ -14,18 +15,18 @@ import java.util.ArrayList;
 public class Canvas {
     private String pathToFeature;
     private int markerID;
-    private ArrayList<Model> models;
-    private ArrayList<Model> modelsMovie;
+    private List<Model> models;
+    private List<Model> modelsMovie;
 
     /**
      *
      * @param name Only use to debug
      * @param pathToFeature Path to feature folder (folder containing iset,fset and fset3 file
-     * @param models An ArrayList of your models
+     * @param models A List of your models
      */
-    public Canvas(String name, String pathToFeature, ArrayList<Model> models){
+    public Canvas(String name, String pathToFeature, List<Model> models){
         this.pathToFeature = pathToFeature;
-        this.models = (ArrayList<Model>) models.clone();
+        this.models = new ArrayList<Model>(models);
         modelsMovie = new ArrayList<Model>();
     }
 
