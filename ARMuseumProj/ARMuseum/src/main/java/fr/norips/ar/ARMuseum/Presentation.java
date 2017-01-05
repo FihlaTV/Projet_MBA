@@ -21,6 +21,7 @@ import fr.norips.ar.ARMuseum.Config.JSONParser;
 
 public class Presentation extends Activity {
     final static String TAG = "Presentation";
+    final static String DOMAIN = "norips.me";
     private final static int REQUEST_WRITE = 1;
 
     @Override
@@ -71,7 +72,7 @@ public class Presentation extends Activity {
             return;
         }
         JSONParser json = new JSONParser(this.getApplicationContext(),bv);
-        boolean result = json.createConfig("http://192.168.1.75/format.json", "http://norips.ddns.net/format.json");
+        boolean result = json.createConfig("http://192.168.1.75/format.json", "http://"+ DOMAIN +"/format.json");
         Log.d(TAG,"JSON create" + result);
 
     }
@@ -92,7 +93,7 @@ public class Presentation extends Activity {
                         String.format("Reading file access permission \"%s\" allowed", permissions[0]),
                         Toast.LENGTH_SHORT).show();
                 JSONParser json = new JSONParser(this.getApplicationContext(),(Button) findViewById(R.id.btLaunch));
-                boolean result = json.createConfig("http://192.168.1.75/format.json", "http://norips.ddns.net/format.json");
+                boolean result = json.createConfig("http://192.168.1.75/format.json", "http://"+ DOMAIN +"/format.json");
                 Log.d(TAG,"JSON request " + result);
             }
         }
