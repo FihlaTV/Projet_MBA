@@ -47,7 +47,11 @@ public class Canvas {
         modelsMovie = new ArrayList<Model>();
     }
 
-
+    /**
+     * Must be called in opengl thread
+     * @param shaderProgram Shader compiled program for standard texture
+     * @param shaderProgramMovie Shader compiled program for movie texture (Using OES buffer)
+     */
     public void initGL(ShaderProgram shaderProgram,ShaderProgram shaderProgramMovie){
         for(Model m : models){
             m.initGL(shaderProgram);
@@ -99,12 +103,18 @@ public class Canvas {
         }
     }
 
+    /**
+     *  Change texture to all model to next page
+     */
     public void nextPage(){
         for(Model model : models){
             model.nextPage();
         }
     }
 
+    /**
+     * Change texture to all model to previous page
+     */
     public void previousPage(){
         for(Model model : models){
             model.previousPage();

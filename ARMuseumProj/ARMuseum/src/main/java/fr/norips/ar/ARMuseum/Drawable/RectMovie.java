@@ -11,6 +11,7 @@ import android.view.Surface;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,7 +26,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
 
     private int mTextureUniformHandle;
 
-    public RectMovie(float pos[][], ArrayList<String> pathToTextures, Context context) {
+    public RectMovie(float pos[][], List<String> pathToTextures, Context context) {
         super(pos,pathToTextures,context);
         mMediaPlayer = new MediaPlayer();
         try {

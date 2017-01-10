@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.norips.ar.ARMuseum.R;
 import fr.norips.ar.ARMuseum.ARMuseumActivity;
@@ -39,13 +41,10 @@ public class JSONParser {
     }
     //TODO Add warning when createConfig take too long time
     public boolean createConfig(String... urls) {
-        new AsyncTask<String,Integer,ArrayList<Canvas>>() {
+        new AsyncTask<String,Integer,List<Canvas>>() {
             private boolean checkAndDownload(File currFile,DownloadConfig dc,boolean connected,String filePath,String fileName,String fileMD5){
                 if (!currFile.exists()) {
-                    if(connected)
-                        return dc.downloadURL(filePath,fileName);
-                    else
-                        return false;
+                    return connected && dc.downloadURL(filePath,fileName);
                 } else {
                     if (!MD5.checkMD5(fileMD5, currFile))
                         if(connected)
@@ -54,18 +53,17 @@ public class JSONParser {
                 }
             }
             @Override
-            protected void onPostExecute(ArrayList<Canvas> result){
+            protected void onPostExecute(List<Canvas> result){
                 super.onPostExecute(result);
                 if(result != null) {
                     ConfigHolder.getInstance().load(result);
                     button.setEnabled(true);
-                    Log.d(TAG,"Button enabled");
                 } else {
                     Toast.makeText(context,"Error while downloading file or loading cache",Toast.LENGTH_LONG).show();
                 }
             }
             @Override
-            protected ArrayList<Canvas> doInBackground(String... urls) {
+            protected List<Canvas> doInBackground(String... urls) {
                 float currentProgress = 0;
                 if(Debug.isDebuggerConnected())
                     Debug.waitForDebugger();
@@ -73,44 +71,28 @@ public class JSONParser {
                 DownloadConfig dc = new DownloadConfig(context);
                 try {
                     boolean connected = false;
-                    for (int indURL = 0; indURL < urls.length; indURL++) {
-                        if (dc.downloadURL(urls[indURL], "format.json") == true) {
+                    for (String url: urls) {
+                        if (dc.downloadURL(url, "format.json")) {
                             connected = true;
                             break;
                         }
+
                     }
                     if (!connected) { //Go offline
                         Log.d(TAG,"f");
                     }
                     BufferedReader reader = null;
                     StringBuilder result = new StringBuilder();
-                    try {
-                        reader = new BufferedReader(
-                                new InputStreamReader(new FileInputStream(new File(context.getExternalFilesDir(null), "format.json"))));
-
-                        // do reading, usually loop until end of file reading
-                        String mLine;
-                        while ((mLine = reader.readLine()) != null) {
-                            result.append(mLine);
-                        }
-                    } catch (IOException e) { //Can't open file
-                        //log the exception
-                        e.printStackTrace();
-                        return null; //Abort
-                    } finally {
-                        if (reader != null) {
-                            try {
-                                reader.close();
-                            } catch (IOException e) {
-                                //log the exception
-                                e.printStackTrace();
-                                return null;
-                            }
-                        }
+                    reader = new BufferedReader(
+                            new InputStreamReader(new FileInputStream(new File(context.getExternalFilesDir(null), "format.json"))));
+                    // do reading, usually loop until end of file reading
+                    String mLine;
+                    while ((mLine = reader.readLine()) != null) {
+                        result.append(mLine);
                     }
                     jObject = new JSONObject(result.toString());
                     JSONArray canvas = jObject.getJSONArray("canvas");
-                    ArrayList<Canvas> ALcanvas = new ArrayList<Canvas>();
+                    List<Canvas> ALcanvas = new ArrayList<Canvas>();
                     for (int i = 0; i < canvas.length(); i++) {
                         JSONObject jO = canvas.getJSONObject(i);
                         String name = jO.getString("name");
@@ -169,7 +151,7 @@ public class JSONParser {
                             for (int k = 0; k < 3; k++)
                                 pos[3][k] = Float.parseFloat(blcs[k]);
                             JSONArray textures = model.getJSONArray("textures");
-                            ArrayList<String> pathToTextures = new ArrayList<>();
+                            List<String> pathToTextures = new ArrayList<>();
                             for (int k = 0; k < textures.length(); k++) {
                                 String textureName = textures.getJSONObject(k).getString("name");
                                 String texturePath = textures.getJSONObject(k).getString("path");
@@ -182,7 +164,7 @@ public class JSONParser {
                                 }
 
                                 pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
-                                publishProgress((k+1)/textures.length() * 1/models.length() * (1/canvas.length()) * 100 , 100);
+                                publishProgress((k+1)/textures.length() * (1/models.length()) * (1/canvas.length()) * 100 , 100);
                                 float perCanva = 1.0f / canvas.length();
                                 float perModel = 1.0f / models.length();
                                 float perTexture = 1.0f/textures.length()* perCanva * perModel*100;
@@ -203,7 +185,16 @@ public class JSONParser {
                         ALcanvas.add(c);
                     }
                     return ALcanvas;
-                } catch (Exception e) {
+                } catch (JSONException e) {
+                    Log.e(TAG,"Error while parsing");
+                    e.printStackTrace();
+                    return null;
+                } catch (IOException e) {
+                    Log.e(TAG,"Error while reading");
+                    e.printStackTrace();
+                    return null;
+                } catch (NullPointerException e) {
+                    Log.e(TAG,"Unknown error");
                     e.printStackTrace();
                     return null;
                 }
