@@ -19,15 +19,15 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class RectTex extends Rectangle {
     private final static String TAG = "RectTex";
-    private boolean finished = false;
-    private int[] textures = null;
-    private int[] textureAct = null;
+    protected boolean finished = false;
+    protected int[] textures = null;
+    protected int[] textureAct = null;
 
     public RectTex(float pos[][], List<String> pathToTextures, Context context) {
         super(pos,pathToTextures,context);
     }
     /** This will be used to pass in the texture. */
-    private int mTextureUniformHandle;
+    protected int mTextureUniformHandle;
 
 
     /**
@@ -36,9 +36,9 @@ public class RectTex extends Rectangle {
      * with possible changes in values.
      *
      */
-    private Handler handler = null;
-    Runnable runnable = null;
-    private void reInitLoad(){
+    protected Handler handler = null;
+    protected Runnable runnable = null;
+    protected void reInitLoad(){
         for (int i = 0; i < pathToTextures.size(); i++)
             stack.addFirst(textureAct[i]);
 
@@ -70,7 +70,7 @@ public class RectTex extends Rectangle {
         shaderProgram.setModelViewMatrix(modelViewMatrix);
         if(finished == false) {
             Log.d(TAG,"loadGLTexture called");
-            loadGLTexture(context,pathToTextures);
+            loadGLTexture();
             Log.d(TAG,"loadGLTexture exited");
         } else {
             mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
@@ -85,10 +85,8 @@ public class RectTex extends Rectangle {
     /**
      * Load the textures
      *
-     * @param context - The Activity context
-     * @param pathToTextures ArrayList of path to textures
      */
-    public void loadGLTexture(Context context,List<String> pathToTextures) {
+    protected void loadGLTexture() {
         //Generate a number of texture, texture pointer...
         textures = new int[pathToTextures.size()];
         textureAct = new int[pathToTextures.size()];
@@ -128,7 +126,7 @@ public class RectTex extends Rectangle {
      * @param filePath
      * @return Bitmap type
      */
-    public static Bitmap getBitmapFromAsset(Context context, String filePath) {
+    protected Bitmap getBitmapFromAsset(Context context, String filePath) {
         return BitmapFactory.decodeFile(filePath);
     }
 }

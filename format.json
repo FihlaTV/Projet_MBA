@@ -172,6 +172,23 @@
               "MD5": "036393dbc2b07373cedc60c09b53b52e"
             }
           ]
+        },
+	{
+          "_comment": "t = top; b = bottom; l = left; r = right; c = corner",
+          "name": "Sainte carre decale 100",
+          "type" : "texte",
+          "tlc": "100,100,0",
+          "trc": "200,100,0",
+          "brc": "200,0,0",
+          "blc": "100,0,0",
+          "textures": [
+            {
+              "text": "Test1"
+            },
+            {
+              "text": "Test2"
+            }
+          ]
         }
       ]
     }

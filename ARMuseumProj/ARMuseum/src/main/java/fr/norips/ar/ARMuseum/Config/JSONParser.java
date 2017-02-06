@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.norips.ar.ARMuseum.Drawable.RectTexte;
 import fr.norips.ar.ARMuseum.R;
 import fr.norips.ar.ARMuseum.ARMuseumActivity;
 import fr.norips.ar.ARMuseum.Drawable.RectMovie;
@@ -152,30 +153,40 @@ public class JSONParser {
                                 pos[3][k] = Float.parseFloat(blcs[k]);
                             JSONArray textures = model.getJSONArray("textures");
                             List<String> pathToTextures = new ArrayList<>();
-                            for (int k = 0; k < textures.length(); k++) {
-                                String textureName = textures.getJSONObject(k).getString("name");
-                                String texturePath = textures.getJSONObject(k).getString("path");
-                                String textureMD5 = textures.getJSONObject(k).getString("MD5");
-                                File currFile = new File(context.getExternalFilesDir(null) + "/" + featureName + "/" + textureName);
-
-                                if( ! checkAndDownload(currFile,dc,connected,texturePath,featureName + "/" + textureName,textureMD5)){
-                                    continue;
-                                    //TODO check for return
+                            if(modelType.equalsIgnoreCase("texte")) {
+                                for (int k = 0; k < textures.length(); k++) {
+                                    String textToDraw = textures.getJSONObject(k).getString("text");
+                                    pathToTextures.add(textToDraw);
                                 }
+                            } else {
+                                for (int k = 0; k < textures.length(); k++) {
+                                    String textureName = textures.getJSONObject(k).getString("name");
+                                    String texturePath = textures.getJSONObject(k).getString("path");
+                                    String textureMD5 = textures.getJSONObject(k).getString("MD5");
+                                    File currFile = new File(context.getExternalFilesDir(null) + "/" + featureName + "/" + textureName);
 
-                                pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
-                                publishProgress((k+1)/textures.length() * (1/models.length()) * (1/canvas.length()) * 100 , 100);
-                                float perCanva = 1.0f / canvas.length();
-                                float perModel = 1.0f / models.length();
-                                float perTexture = 1.0f/textures.length()* perCanva * perModel*100;
-                                currentProgress += perTexture;
-                                publishProgress((int)currentProgress,100);
+                                    if (!checkAndDownload(currFile, dc, connected, texturePath, featureName + "/" + textureName, textureMD5)) {
+                                        continue;
+                                        //TODO check for return
+                                    }
+
+                                    pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
+                                    publishProgress((k + 1) / textures.length() * (1 / models.length()) * (1 / canvas.length()) * 100, 100);
+                                    float perCanva = 1.0f / canvas.length();
+                                    float perModel = 1.0f / models.length();
+                                    float perTexture = 1.0f / textures.length() * perCanva * perModel * 100;
+                                    currentProgress += perTexture;
+                                    publishProgress((int) currentProgress, 100);
+                                }
                             }
                             //Add model to canvas
                             Model m;
                             if(modelType.equalsIgnoreCase("video")) {
                                 m = new Model(modelName, new RectMovie(pos, pathToTextures, context));
                                 c.addModelMovie(m);
+                            } else if(modelType.equalsIgnoreCase("texte")) {
+                                m = new Model(modelName, new RectTexte(pos, pathToTextures, context));
+                                c.addModel(m);
                             } else {
                                 m = new Model(modelName, pos, pathToTextures, context);
                                 c.addModel(m);
