@@ -96,7 +96,7 @@ public class RectTex extends Rectangle {
 
         for (int i = 0; i < pathToTextures.size(); i++) {
             // Create a bitmap
-            bitmap = getBitmapFromAsset(context, pathToTextures.get(i));
+            bitmap = getBitmapFromAsset(context, i);
 
             //...and bind it to our array
             textureAct[i] = stack.removeFirst();
@@ -123,11 +123,11 @@ public class RectTex extends Rectangle {
     /**
      * Return bitmap from file
      * @param context
-     * @param filePath
+     * @param index Index of file to load
      * @return Bitmap type
      */
-    protected Bitmap getBitmapFromAsset(Context context, String filePath) {
-        return BitmapFactory.decodeFile(filePath);
+    protected Bitmap getBitmapFromAsset(Context context, int index) {
+        return BitmapFactory.decodeFile(pathToTextures.get(index));
     }
 }
 
