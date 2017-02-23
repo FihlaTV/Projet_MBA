@@ -22,7 +22,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
     private String TAG = "RectMovie";
     private int textures[];
     private boolean finished = false;
-    private int textureAct;
+    private int textureAct = 0;
 
     private int mTextureUniformHandle;
 

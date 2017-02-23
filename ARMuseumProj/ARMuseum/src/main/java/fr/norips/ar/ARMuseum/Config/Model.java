@@ -69,6 +69,7 @@ public class Model {
     public void init(){
         if(drawable == null)
             drawable = new RectTex(pos,pathToTextures,context);
+        
     }
 
     public void nextPage(){

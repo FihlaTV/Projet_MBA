@@ -49,6 +49,7 @@
 
 package fr.norips.ar.ARMuseum;
 
+import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -56,10 +57,20 @@ import org.artoolkit.ar.base.ARToolKit;
 import org.artoolkit.ar.base.rendering.gles20.ARRendererGLES20;
 import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import fr.norips.ar.ARMuseum.Config.Canvas;
 import fr.norips.ar.ARMuseum.Config.ConfigHolder;
+import fr.norips.ar.ARMuseum.Config.Model;
+import fr.norips.ar.ARMuseum.Drawable.Drawable;
+import fr.norips.ar.ARMuseum.Drawable.RectTexMulti;
+import fr.norips.ar.ARMuseum.Drawable.Texture;
+import fr.norips.ar.ARMuseum.Drawable.TextureIMG;
+import fr.norips.ar.ARMuseum.Drawable.TextureTXT;
 import fr.norips.ar.ARMuseum.shader.SimpleFragmentShader;
 import fr.norips.ar.ARMuseum.shader.SimpleShaderProgram;
 import fr.norips.ar.ARMuseum.shader.SimpleVertexShader;
@@ -73,15 +84,46 @@ import fr.norips.ar.ARMuseum.shaderMovie.VertexShaderMovie;
 public class SimpleRenderer extends ARRendererGLES20 {
     private final static String TAG = "SimpleRenderer";
     private float tmpMatrix[] = new float[16];
+    private Context context;
     /**
      * This method gets called from the framework to setup the ARScene.
      * So this is the best spot to configure you assets for your AR app.
      * For example register used markers in here.
      */
-
+    public SimpleRenderer(Context _c) {
+        context = _c;
+    }
     @Override
     public boolean configureARScene() {
         //Aka have access to file, else onRequestPermissionsResult while trigger it
+        ConfigHolder ch = ConfigHolder.getInstance();
+        ch.erase();
+        List<Canvas> l = new ArrayList<Canvas>();
+        Canvas c = new Canvas("pinball","/storage/emulated/0/Android/data/fr.norips.ARMuseum/files/pinball/pinball");
+        float pos[][] = new float[4][3];
+        pos[0][0] = 0.0f;
+        pos[0][1] = 100.0f;
+        pos[0][2] = 0.0f;
+        pos[1][0] = 100.0f;
+        pos[1][1] = 100.0f;
+        pos[1][2] = 0.0f;
+        pos[2][0] = 100.0f;
+        pos[2][1] = 0.0f;
+        pos[2][2] = 0.0f;
+        pos[3][0] = 0.0f;
+        pos[3][1] = 0.0f;
+        pos[3][2] = 0.0f;
+        RectTexMulti d = new RectTexMulti(pos,context);
+        TextureIMG t = new TextureIMG(context,"/storage/emulated/0/Android/data/fr.norips.ARMuseum/files/pinball/tex_pinball.png");
+        TextureTXT ttxt = new TextureTXT(context,"Lorem ipsum dolores");
+        t.init();
+        ttxt.init();
+        d.addTexture(t);
+        d.addTexture(ttxt);
+        Model m = new Model("pinball",d);
+        c.addModel(m);
+        l.add(c);
+        ch.load(l);
         ConfigHolder.getInstance().init();
         ARMuseumActivity.dismisspDialog = true;
         return true;

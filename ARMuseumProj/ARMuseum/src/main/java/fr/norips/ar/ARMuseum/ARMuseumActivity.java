@@ -114,7 +114,7 @@ public class ARMuseumActivity extends ARActivity {
      */
     @Override
     protected ARRenderer supplyRenderer() {
-        return new SimpleRenderer();
+        return new SimpleRenderer(this.getBaseContext());
     }
 
     /**
