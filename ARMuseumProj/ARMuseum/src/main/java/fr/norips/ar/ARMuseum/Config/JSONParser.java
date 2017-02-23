@@ -20,7 +20,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.norips.ar.ARMuseum.Drawable.RectTexMulti;
 import fr.norips.ar.ARMuseum.Drawable.RectTexte;
+import fr.norips.ar.ARMuseum.Drawable.TextureIMG;
+import fr.norips.ar.ARMuseum.Drawable.TextureTXT;
 import fr.norips.ar.ARMuseum.R;
 import fr.norips.ar.ARMuseum.ARMuseumActivity;
 import fr.norips.ar.ARMuseum.Drawable.RectMovie;
@@ -133,7 +136,6 @@ public class JSONParser {
                         for (int j = 0; j < models.length(); j++) {
                             JSONObject model = models.getJSONObject(j);
                             String modelName = model.getString("name");
-                            String modelType = model.getString("type");
                             float pos[][] = new float[4][3];
                             String tlc = model.getString("tlc");
                             String trc = model.getString("trc");
@@ -153,13 +155,12 @@ public class JSONParser {
                                 pos[3][k] = Float.parseFloat(blcs[k]);
                             JSONArray textures = model.getJSONArray("textures");
                             List<String> pathToTextures = new ArrayList<>();
-                            if(modelType.equalsIgnoreCase("texte")) {
-                                for (int k = 0; k < textures.length(); k++) {
-                                    String textToDraw = textures.getJSONObject(k).getString("text");
-                                    pathToTextures.add(textToDraw);
-                                }
-                            } else {
-                                for (int k = 0; k < textures.length(); k++) {
+                            RectTexMulti rtm = new RectTexMulti(pos,context);
+                            for (int k = 0; k < textures.length(); k++) {
+                                String TextureType = textures.getJSONObject(k).getString("type");
+                                if(TextureType.equalsIgnoreCase("texte")) {
+                                    rtm.addTexture(new TextureTXT(context,textures.getJSONObject(k).getString("text")));
+                                } else if (TextureType.equalsIgnoreCase("image")) {
                                     String textureName = textures.getJSONObject(k).getString("name");
                                     String texturePath = textures.getJSONObject(k).getString("path");
                                     String textureMD5 = textures.getJSONObject(k).getString("MD5");
@@ -169,28 +170,16 @@ public class JSONParser {
                                         continue;
                                         //TODO check for return
                                     }
-
-                                    pathToTextures.add(context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName);
                                     publishProgress((k + 1) / textures.length() * (1 / models.length()) * (1 / canvas.length()) * 100, 100);
                                     float perCanva = 1.0f / canvas.length();
                                     float perModel = 1.0f / models.length();
                                     float perTexture = 1.0f / textures.length() * perCanva * perModel * 100;
                                     currentProgress += perTexture;
                                     publishProgress((int) currentProgress, 100);
+                                    rtm.addTexture(new TextureIMG(context,context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName));
                                 }
                             }
-                            //Add model to canvas
-                            Model m;
-                            if(modelType.equalsIgnoreCase("video")) {
-                                m = new Model(modelName, new RectMovie(pos, pathToTextures, context));
-                                c.addModelMovie(m);
-                            } else if(modelType.equalsIgnoreCase("texte")) {
-                                m = new Model(modelName, new RectTexte(pos, pathToTextures, context));
-                                c.addModel(m);
-                            } else {
-                                m = new Model(modelName, pos, pathToTextures, context);
-                                c.addModel(m);
-                            }
+                            c.addModel(new Model(modelName,rtm));
 
                         }
                         ALcanvas.add(c);

@@ -67,9 +67,9 @@ public class Model {
     }
 
     public void init(){
-        if(drawable == null)
-            drawable = new RectTex(pos,pathToTextures,context);
-        
+        if(drawable != null)
+            drawable.init();
+
     }
 
     public void nextPage(){
@@ -80,7 +80,7 @@ public class Model {
         drawable.previousTexture();
     }
 
-    public void initGL(ShaderProgram shaderProgram){
-        drawable.setShaderProgram(shaderProgram);
+    public void initGL(ShaderProgram shaderProgram,ShaderProgram movieShader){
+        drawable.setShaderProgram(shaderProgram,movieShader);
     }
 }

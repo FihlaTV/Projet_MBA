@@ -72,7 +72,7 @@ public class Presentation extends Activity {
             return;
         }
         JSONParser json = new JSONParser(this.getApplicationContext(),bv);
-        boolean result = json.createConfig("http://192.168.1.75/format.json", "http://"+ DOMAIN +"/format.json");
+        boolean result = json.createConfig("http://192.168.1.75/format_mult.json", "http://"+ DOMAIN +"/format_mult.json");
         Log.d(TAG,"JSON create" + result);
 
     }

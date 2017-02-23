@@ -14,7 +14,7 @@ import android.text.TextPaint;
  */
 
 public class TextureTXT extends TextureIMG {
-    public TextureTXT(Context c, String text) {
+    public TextureTXT(Context c,String text) {
         super(c,text);
     }
     @Override

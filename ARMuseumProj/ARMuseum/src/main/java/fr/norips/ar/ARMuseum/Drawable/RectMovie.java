@@ -18,11 +18,11 @@ import java.util.List;
  * Created by norips on 24/10/16.
  */
 
-public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvailableListener{
+public abstract class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvailableListener{
     private String TAG = "RectMovie";
     private int textures[];
     private boolean finished = false;
-    private int textureAct = 0;
+    private int textureAct;
 
     private int mTextureUniformHandle;
 
@@ -59,7 +59,7 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
         }
 
     }
-    
+
     private void init(Bitmap first) {
         //Generate a number of texture, texture pointer...
         textures = new int[1];

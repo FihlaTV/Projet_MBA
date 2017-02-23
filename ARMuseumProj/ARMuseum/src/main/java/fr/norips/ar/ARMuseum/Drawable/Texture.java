@@ -24,4 +24,5 @@ public abstract class Texture {
         }
         firstTime = false;
     }
+    public abstract void init();
 }

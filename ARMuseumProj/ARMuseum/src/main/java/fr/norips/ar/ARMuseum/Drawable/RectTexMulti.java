@@ -36,7 +36,7 @@ public class RectTexMulti extends Rectangle {
 
 
     }
-    public void setShaderProgram(ShaderProgram shaderProgram) {
+    public void setShaderProgram(ShaderProgram shaderProgram, ShaderProgram movieShader) {
         this.shaderProgram = shaderProgram;
         Log.d(TAG,"Called");
         for (Texture t:
@@ -45,6 +45,15 @@ public class RectTexMulti extends Rectangle {
                 TextureIMG timg = (TextureIMG) t;
                 timg.setShader(shaderProgram);
             }
+            /*else if (t instanceof TextureMovie) {
+                TextureMovie tmov = (TextureMovie) t;
+                tmov.setShader(movieShader);
+            }*/
+        }
+    }
+    public void init() {
+        for(Texture t: arrTexture) {
+            t.init();
         }
     }
 

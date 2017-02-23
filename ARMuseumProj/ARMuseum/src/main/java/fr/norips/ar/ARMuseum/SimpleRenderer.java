@@ -96,7 +96,7 @@ public class SimpleRenderer extends ARRendererGLES20 {
     @Override
     public boolean configureARScene() {
         //Aka have access to file, else onRequestPermissionsResult while trigger it
-        ConfigHolder ch = ConfigHolder.getInstance();
+/*        ConfigHolder ch = ConfigHolder.getInstance();
         ch.erase();
         List<Canvas> l = new ArrayList<Canvas>();
         Canvas c = new Canvas("pinball","/storage/emulated/0/Android/data/fr.norips.ARMuseum/files/pinball/pinball");
@@ -115,15 +115,13 @@ public class SimpleRenderer extends ARRendererGLES20 {
         pos[3][2] = 0.0f;
         RectTexMulti d = new RectTexMulti(pos,context);
         TextureIMG t = new TextureIMG(context,"/storage/emulated/0/Android/data/fr.norips.ARMuseum/files/pinball/tex_pinball.png");
-        TextureTXT ttxt = new TextureTXT(context,"Lorem ipsum dolores");
-        t.init();
-        ttxt.init();
+        TextureTXT ttxt = new TextureTXT("Lorem ipsum dolores");
         d.addTexture(t);
         d.addTexture(ttxt);
         Model m = new Model("pinball",d);
         c.addModel(m);
         l.add(c);
-        ch.load(l);
+        ch.load(l);*/
         ConfigHolder.getInstance().init();
         ARMuseumActivity.dismisspDialog = true;
         return true;
