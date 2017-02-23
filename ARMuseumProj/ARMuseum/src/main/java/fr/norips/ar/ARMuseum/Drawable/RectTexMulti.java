@@ -28,11 +28,19 @@ public class RectTexMulti extends Rectangle {
     }
 
     public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
-        GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
-        shaderProgram.setProjectionMatrix(projectionMatrix);
-        shaderProgram.setModelViewMatrix(modelViewMatrix);
-        arrTexture.get(currentTexture).paint();
-        shaderProgram.render(this.getmVertexBuffer(),this.getmTextureBuffer() , this.getmIndexBuffer());
+        if(arrTexture.get(currentTexture) instanceof TextureMOV) {
+            GLES20.glUseProgram(shaderMovie.getShaderProgramHandle());
+            shaderMovie.setProjectionMatrix(projectionMatrix);
+            shaderMovie.setModelViewMatrix(modelViewMatrix);
+            arrTexture.get(currentTexture).paint();
+            shaderMovie.render(this.getmVertexBuffer(),this.getmTextureBuffer() , this.getmIndexBuffer());
+        } else {
+            GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
+            shaderProgram.setProjectionMatrix(projectionMatrix);
+            shaderProgram.setModelViewMatrix(modelViewMatrix);
+            arrTexture.get(currentTexture).paint();
+            shaderProgram.render(this.getmVertexBuffer(),this.getmTextureBuffer() , this.getmIndexBuffer());
+        }
 
 
     }
@@ -46,6 +54,7 @@ public class RectTexMulti extends Rectangle {
                 timg.setShader(shaderProgram);
             }
             else if (t instanceof TextureMOV) {
+                shaderMovie = movieShader;
                 TextureMOV tmov = (TextureMOV) t;
                 tmov.setShader(movieShader);
             }

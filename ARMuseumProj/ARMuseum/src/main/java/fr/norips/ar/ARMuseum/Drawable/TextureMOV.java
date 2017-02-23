@@ -29,16 +29,16 @@ public class TextureMOV extends Texture implements SurfaceTexture.OnFrameAvailab
     public TextureMOV(Context c, String _path) {
         path = _path;
         context = c;
-
-    }
-    @Override
-    public void init() {
         mMediaPlayer = new MediaPlayer();
         try {
             mMediaPlayer.setDataSource(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+    @Override
+    public void init() {
     }
     private boolean updateSurface = false;
     private SurfaceTexture mSurface;

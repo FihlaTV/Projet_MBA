@@ -25,6 +25,7 @@ public abstract class Rectangle implements Drawable {
     protected ByteBuffer mIndexBuffer;
     protected List<String> pathToTextures;
     protected ShaderProgram shaderProgram = null;
+    protected ShaderProgram shaderMovie = null;
     protected Context context;
     protected int currentTexture;
     protected static int nextTexture=0;
