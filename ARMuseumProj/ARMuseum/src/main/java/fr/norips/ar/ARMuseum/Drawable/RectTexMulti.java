@@ -45,10 +45,10 @@ public class RectTexMulti extends Rectangle {
                 TextureIMG timg = (TextureIMG) t;
                 timg.setShader(shaderProgram);
             }
-            /*else if (t instanceof TextureMovie) {
-                TextureMovie tmov = (TextureMovie) t;
+            else if (t instanceof TextureMOV) {
+                TextureMOV tmov = (TextureMOV) t;
                 tmov.setShader(movieShader);
-            }*/
+            }
         }
     }
     public void init() {

@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.norips.ar.ARMuseum.Drawable.RectTexMulti;
-import fr.norips.ar.ARMuseum.Drawable.RectTexte;
 import fr.norips.ar.ARMuseum.Drawable.TextureIMG;
+import fr.norips.ar.ARMuseum.Drawable.TextureMOV;
 import fr.norips.ar.ARMuseum.Drawable.TextureTXT;
 import fr.norips.ar.ARMuseum.R;
 import fr.norips.ar.ARMuseum.ARMuseumActivity;
@@ -154,13 +154,12 @@ public class JSONParser {
                             for (int k = 0; k < 3; k++)
                                 pos[3][k] = Float.parseFloat(blcs[k]);
                             JSONArray textures = model.getJSONArray("textures");
-                            List<String> pathToTextures = new ArrayList<>();
                             RectTexMulti rtm = new RectTexMulti(pos,context);
                             for (int k = 0; k < textures.length(); k++) {
                                 String TextureType = textures.getJSONObject(k).getString("type");
                                 if(TextureType.equalsIgnoreCase("texte")) {
                                     rtm.addTexture(new TextureTXT(context,textures.getJSONObject(k).getString("text")));
-                                } else if (TextureType.equalsIgnoreCase("image")) {
+                                } else if (TextureType.equalsIgnoreCase("image") || TextureType.equalsIgnoreCase("video")) {
                                     String textureName = textures.getJSONObject(k).getString("name");
                                     String texturePath = textures.getJSONObject(k).getString("path");
                                     String textureMD5 = textures.getJSONObject(k).getString("MD5");
@@ -176,7 +175,11 @@ public class JSONParser {
                                     float perTexture = 1.0f / textures.length() * perCanva * perModel * 100;
                                     currentProgress += perTexture;
                                     publishProgress((int) currentProgress, 100);
-                                    rtm.addTexture(new TextureIMG(context,context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName));
+                                    if(TextureType.equalsIgnoreCase("image"))
+                                        rtm.addTexture(new TextureIMG(context,context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName));
+                                    if(TextureType.equalsIgnoreCase("video")) {
+                                        rtm.addTexture(new TextureMOV(context,context.getExternalFilesDir(null).getAbsolutePath() + "/" + featureName + "/" + textureName));
+                                    }
                                 }
                             }
                             c.addModel(new Model(modelName,rtm));

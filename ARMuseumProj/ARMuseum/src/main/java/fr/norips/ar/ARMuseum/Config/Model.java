@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.norips.ar.ARMuseum.Drawable.Drawable;
-import fr.norips.ar.ARMuseum.Drawable.RectTex;
 import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 
 /**
