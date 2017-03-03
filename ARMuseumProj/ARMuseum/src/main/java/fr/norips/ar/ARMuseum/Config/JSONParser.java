@@ -24,9 +24,6 @@ import fr.norips.ar.ARMuseum.Drawable.RectTexMulti;
 import fr.norips.ar.ARMuseum.Drawable.TextureIMG;
 import fr.norips.ar.ARMuseum.Drawable.TextureMOV;
 import fr.norips.ar.ARMuseum.Drawable.TextureTXT;
-import fr.norips.ar.ARMuseum.R;
-import fr.norips.ar.ARMuseum.ARMuseumActivity;
-import fr.norips.ar.ARMuseum.Drawable.RectMovie;
 import fr.norips.ar.ARMuseum.Util.DownloadConfig;
 import fr.norips.ar.ARMuseum.Util.MD5;
 
