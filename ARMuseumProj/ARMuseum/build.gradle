@@ -2,8 +2,8 @@ apply plugin: 'com.android.model.application'
 
 model {
     android {
-        compileSdkVersion = 23
-        buildToolsVersion = "23.0.3"
+        compileSdkVersion = 24
+        buildToolsVersion = "25.0.0"
 
         defaultConfig.with {
             applicationId = "fr.norips.ARMuseum"
