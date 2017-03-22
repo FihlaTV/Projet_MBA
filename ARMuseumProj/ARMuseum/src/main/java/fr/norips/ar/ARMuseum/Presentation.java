@@ -23,10 +23,13 @@ public class Presentation extends Activity {
     final static String TAG = "Presentation";
     final static String DOMAIN = "norips.me";
     private final static int REQUEST_WRITE = 1;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent myIntent = getIntent(); // gets the previously created intent
+        url = myIntent.getStringExtra("url"); // will return "FirstKeyValue"
         setContentView(R.layout.activity_presentation);
         Button bv = (Button) findViewById(R.id.btLaunch);
         bv.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +75,7 @@ public class Presentation extends Activity {
             return;
         }
         JSONParser json = new JSONParser(this.getApplicationContext(),bv);
-        boolean result = json.createConfig("http://192.168.1.75/format_mult.json", "http://"+ DOMAIN +"/format_mult.json");
+        boolean result = json.createConfig(url, "http://"+ DOMAIN +"/format_mult.json");
         Log.d(TAG,"JSON create" + result);
 
     }
@@ -93,7 +96,7 @@ public class Presentation extends Activity {
                         String.format("Reading file access permission \"%s\" allowed", permissions[0]),
                         Toast.LENGTH_SHORT).show();
                 JSONParser json = new JSONParser(this.getApplicationContext(),(Button) findViewById(R.id.btLaunch));
-                boolean result = json.createConfig("http://192.168.1.75/format.json", "http://"+ DOMAIN +"/format.json");
+                boolean result = json.createConfig(url, "http://"+ DOMAIN +"/format.json");
                 Log.d(TAG,"JSON request " + result);
             }
         }

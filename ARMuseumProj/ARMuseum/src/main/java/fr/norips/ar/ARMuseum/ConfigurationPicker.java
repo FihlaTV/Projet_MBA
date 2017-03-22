@@ -1,12 +1,14 @@
 package fr.norips.ar.ARMuseum;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,7 @@ public class ConfigurationPicker extends AppCompatActivity {
     private ListView list;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
+    private ArrayList<String> arrayListURL;
     private EditText etURL;
     private Button btReload;
     @Override
@@ -43,12 +47,35 @@ public class ConfigurationPicker extends AppCompatActivity {
         SharedPreferences sharedPref = this.getSharedPreferences(
                 MY_PREFS_ENDPOINT, Context.MODE_PRIVATE);
         etURL = (EditText) findViewById(R.id.etURL);
-        String url = sharedPref.getString("endpoint","http://norips.me/endpoint.json");
+        String url = sharedPref.getString("endpoint",getResources().getString(R.string.endpointURL));
         etURL.setText(url);
 
         btReload = (Button) findViewById(R.id.btReload);
+        btReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                        MY_PREFS_ENDPOINT, Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = sharedPref.edit();
+                etURL = (EditText) findViewById(R.id.etURL);
+                edit.putString("endpoint",etURL.getText().toString());
+                edit.commit();
+                new DownloadAndUpdateLv().execute(etURL.getText().toString());
+            }
+        });
         list = (ListView) findViewById(R.id.lvSelect);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+            {
+                Intent myIntent = new Intent(getApplicationContext(), Presentation.class);
+                myIntent.putExtra("url",arrayListURL.get(position));
+                startActivity(myIntent);
+            }
+        });
         arrayList = new ArrayList<String>();
+        arrayListURL = new ArrayList<String>();
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList);
@@ -89,6 +116,8 @@ public class ConfigurationPicker extends AppCompatActivity {
                 while ((line = input.readLine()) != null) {
                     response.append(line);
                 }
+            } catch(SocketException e) {
+                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.toastDownloadEndpointFailed), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 return e.toString();
             } finally {
@@ -114,6 +143,7 @@ public class ConfigurationPicker extends AppCompatActivity {
                 for(int i = 0; i < endpoints.length();i++) {
                     JSONObject endpoint = endpoints.getJSONObject(i);
                     arrayList.add(endpoint.getString("name"));
+                    arrayListURL.add(endpoint.getString("url"));
                 }
                 adapter.notifyDataSetChanged();
             } catch(JSONException e) {
