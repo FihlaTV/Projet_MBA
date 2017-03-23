@@ -63,6 +63,18 @@ public class ConfigurationPicker extends AppCompatActivity {
                 new DownloadAndUpdateLv().execute(etURL.getText().toString());
             }
         });
+
+        Button btModify = (Button) findViewById(R.id.btModify);
+        btModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(etURL.getVisibility() == View.GONE) {
+                    etURL.setVisibility(View.VISIBLE);
+                } else {
+                    etURL.setVisibility(View.GONE);
+                }
+            }
+        });
         list = (ListView) findViewById(R.id.lvSelect);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {

@@ -6,6 +6,7 @@
     <string name="loading_title">Loading config</string>
     <string name="loading_text">Please wait while loading...</string>
     <string name="reload">Reload</string>
+    <string name="config">Modify</string>
     <string name="toastJSONFailed">Error while parsing endpoint</string>
     <string name="endpointURL">http://norips.me/endpoint.json</string>
     <string name="toastDownloadEndpointFailed">Error while downloading endpoint url</string>
