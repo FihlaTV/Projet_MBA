@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_presentation"
     android:layout_width="match_parent"
@@ -20,13 +21,60 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <TextView
-                android:text="@string/lorem"
+                android:id="@+id/tvPresentation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvPresentation" />
+                android:layout_marginBottom="10dp"
+                android:text="@string/presentation1" />
+
+            <TextView
+                android:id="@+id/tvPresentation2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="0dp"
+                android:layout_weight="0.40"
+                android:text="@string/presentation2" />
+
+            <ImageView
+                android:id="@+id/ivTab"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/tab" />
+
+            <TextView
+                android:id="@+id/tvPresentation3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/presentation3" />
+
+            <ImageView
+                android:id="@+id/ivTabText"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/tabpinball" />
+
+            <TextView
+                android:id="@+id/tvPresentation4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/presentation4" />
+
+            <ImageView
+                android:id="@+id/ivTabCache"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/tabpinballcache" />
 
             <Button
                 android:text="@string/next"
