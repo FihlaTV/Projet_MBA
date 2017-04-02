@@ -27,6 +27,8 @@ import fr.norips.ar.ARMuseum.Drawable.TextureTXT;
 import fr.norips.ar.ARMuseum.Util.DownloadConfig;
 import fr.norips.ar.ARMuseum.Util.MD5;
 
+import static java.lang.Math.abs;
+
 
 /**
  * Created by norips on 01/11/16.
@@ -155,7 +157,10 @@ public class JSONParser {
                             for (int k = 0; k < textures.length(); k++) {
                                 String TextureType = textures.getJSONObject(k).getString("type");
                                 if(TextureType.equalsIgnoreCase("texte")) {
-                                    rtm.addTexture(new TextureTXT(context,textures.getJSONObject(k).getString("text")));
+                                    float width = pos[1][0] - pos[0][0];
+                                    float height = pos[0][1] - pos[3][1];
+
+                                    rtm.addTexture(new TextureTXT(context,textures.getJSONObject(k).getString("text"),abs(height/width)));
                                 } else if (TextureType.equalsIgnoreCase("image") || TextureType.equalsIgnoreCase("video")) {
                                     String textureName = textures.getJSONObject(k).getString("name");
                                     String texturePath = textures.getJSONObject(k).getString("path");
