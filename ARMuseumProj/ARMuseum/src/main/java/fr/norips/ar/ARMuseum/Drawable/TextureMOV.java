@@ -25,7 +25,7 @@ public class TextureMOV extends Texture implements SurfaceTexture.OnFrameAvailab
     private MediaPlayer mMediaPlayer;
     private boolean finished = false;
     private int mTextureUniformHandle;
-    private int textureAct;
+    protected int activeTexture = 0;
     public TextureMOV(Context c, String _path) {
         path = _path;
         context = c;
@@ -58,7 +58,7 @@ public class TextureMOV extends Texture implements SurfaceTexture.OnFrameAvailab
                 }
             }
             mTextureUniformHandle = GLES20.glGetUniformLocation(shader.getShaderProgramHandle(), "u_Texture");
-            GLES20.glUniform1i(mTextureUniformHandle, textureAct);
+            GLES20.glUniform1i(mTextureUniformHandle, activeTexture);
         }
 
     }
@@ -70,6 +70,8 @@ public class TextureMOV extends Texture implements SurfaceTexture.OnFrameAvailab
         GLES20.glGenTextures(1, textures, 0);
 
         mTextureID = textures[0];
+        activeTexture = stack.removeFirst();
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + activeTexture);
         GLES20.glBindTexture(GL_TEXTURE_EXTERNAL_OES, mTextureID);
 
         GLES20.glTexParameterf(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER,
