@@ -1,0 +1,28 @@
+{
+  "endpoint": [
+    {
+      "name": "Musée des Beaux Arts de Bordeaux",
+      "url": "http://norips.me/format_mult.json"
+    },
+    {
+      "name": "MAQ",
+      "url": "http://norips.me/format_mult2.json"
+    },
+    {
+      "name": "Test TEXTE",
+      "url": "http://norips.me/format_mult4.json"
+    },
+    {
+      "name": "Test TEXTE+IMG",
+      "url": "http://norips.me/format_mult5.json"
+    },
+    {
+      "name": "Test TEXTE+IMG+VIDEO",
+      "url": "http://norips.me/format_mult6.json"
+    },
+    {
+      "name": "Test superp TEXTE",
+      "url": "http://norips.me/format_mult7.json"
+    }
+  ]
+}
