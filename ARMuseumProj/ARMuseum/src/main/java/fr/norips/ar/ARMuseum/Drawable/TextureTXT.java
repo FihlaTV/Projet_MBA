@@ -57,9 +57,8 @@ public class TextureTXT extends TextureIMG {
         // get a canvas to paint over the bitmap
         Canvas canvas = new Canvas(bitmap);
         int alpha = (int)(0.5 * 255.0f);
-        //White semi transparent
-        canvas.drawColor(Color.argb(alpha, 255, 255, 255));
-
+        //Full transparent
+        canvas.drawColor(Color.TRANSPARENT);
         // get position of text's top left corner
         float x = (bitmap.getWidth() - width) / 2;
         float y = 0;
