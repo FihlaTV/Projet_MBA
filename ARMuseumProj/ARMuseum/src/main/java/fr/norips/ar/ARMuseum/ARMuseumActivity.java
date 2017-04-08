@@ -93,6 +93,13 @@ public class ARMuseumActivity extends ARActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        dismisspDialog = false;
         pDialog = new ProgressDialog(ARMuseumActivity.this);
         pDialog.setMessage(getResources().getString(R.string.loading_text));
         pDialog.setTitle(getResources().getString(R.string.loading_title));
@@ -100,7 +107,6 @@ public class ARMuseumActivity extends ARActivity {
         pDialog.show();
 
     }
-
 
     @Override
     synchronized public void onFrameProcessed() {
