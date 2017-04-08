@@ -303,7 +303,11 @@ public class CaptureCameraPreview extends SurfaceView implements SurfaceHolder.C
         parameters.setPreviewSize(Integer.parseInt(dims[0]), Integer.parseInt(dims[1]));
         parameters.setPreviewFrameRate(30);
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-        camera.setParameters(parameters);
+        try {
+            camera.setParameters(parameters);
+        } catch (RuntimeException e) {
+            Log.d(TAG,e.getMessage());
+        }
 
         parameters = camera.getParameters();
         captureWidth = parameters.getPreviewSize().width;

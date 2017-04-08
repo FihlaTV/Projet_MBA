@@ -4,46 +4,50 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 import android.view.Surface;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.artoolkit.ar.base.rendering.gles20.ShaderProgram;
 
+import java.io.IOException;
 
 /**
- * Created by norips on 24/10/16.
+ * Created by norips on 23/02/17.
  */
 
-public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvailableListener{
-    private String TAG = "RectMovie";
-    private int textures[];
+public class TextureMOV extends Texture implements SurfaceTexture.OnFrameAvailableListener {
+    private String TAG = "TextureMOV";
+    private String path;
+    private Context context;
+    private MediaPlayer mMediaPlayer;
     private boolean finished = false;
-    private int textureAct;
-
     private int mTextureUniformHandle;
-
-    public RectMovie(float pos[][], List<String> pathToTextures, Context context) {
-        super(pos,pathToTextures,context);
+    protected int activeTexture = 0;
+    public TextureMOV(Context c, String _path) {
+        path = _path;
+        context = c;
         mMediaPlayer = new MediaPlayer();
         try {
-            mMediaPlayer.setDataSource(pathToTextures.get(0));
+            mMediaPlayer.setDataSource(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+    @Override
+    public void init() {
     }
     private boolean updateSurface = false;
     private SurfaceTexture mSurface;
-    private MediaPlayer mMediaPlayer;
+    private ShaderProgram shader;
+    public void setShader(ShaderProgram _shader) {
+        shader = _shader;
+    }
     @Override
-    public void draw(float[] projectionMatrix, float[] modelViewMatrix) {
-        super.draw(projectionMatrix,modelViewMatrix);
-        GLES20.glUseProgram(shaderProgram.getShaderProgramHandle());
-        shaderProgram.setProjectionMatrix(projectionMatrix);
-        shaderProgram.setModelViewMatrix(modelViewMatrix);
+    public void paint() {
         if(finished == false) {
             loadGLTexture();
         } else {
@@ -53,31 +57,21 @@ public class RectMovie extends Rectangle implements SurfaceTexture.OnFrameAvaila
                     updateSurface = false;
                 }
             }
-            mTextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram.getShaderProgramHandle(), "u_Texture");
-            GLES20.glUniform1i(mTextureUniformHandle, textureAct);
-            shaderProgram.render(this.getmVertexBuffer(), this.getmTextureBuffer(), this.getmIndexBuffer());
+            mTextureUniformHandle = GLES20.glGetUniformLocation(shader.getShaderProgramHandle(), "u_Texture");
+            GLES20.glUniform1i(mTextureUniformHandle, activeTexture);
         }
 
     }
-    
-    private void init(Bitmap first) {
-        //Generate a number of texture, texture pointer...
-        textures = new int[1];
-        textureAct = stack.removeFirst();
-        GLES20.glGenTextures(1, textures, 0);
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + textureAct);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, first,0);
-
-    }
     private int mTextureID = -1;
-    private static int GL_TEXTURE_EXTERNAL_OES = 0x8D65;
+    private static int GL_TEXTURE_EXTERNAL_OES = GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
 
     private void loadGLTexture(){
-        textures = new int[1];
+        int textures[] = new int[1];
         GLES20.glGenTextures(1, textures, 0);
 
         mTextureID = textures[0];
+        activeTexture = stack.removeFirst();
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + activeTexture);
         GLES20.glBindTexture(GL_TEXTURE_EXTERNAL_OES, mTextureID);
 
         GLES20.glTexParameterf(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER,

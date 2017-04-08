@@ -110,5 +110,10 @@ public class ConfigHolder {
             }
         }
     }
+    public void erase() {
+        targets.clear();
+        finish = false;
+        first = true;
+    }
 
 }

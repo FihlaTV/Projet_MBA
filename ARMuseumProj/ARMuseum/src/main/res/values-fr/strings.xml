@@ -5,4 +5,8 @@
     <string name="loading_title">Chargement de la configuration</string>
     <string name="loading_text">Veuillez patienter...</string>
     <string name="next">Continuer</string>
+    <string name="presentation1">Bienvenue dans l\'application de réalité augmentée ARMuseum. Vous trouverez les instructions en suivant.</string>
+    <string name="presentation2">Veuillez patienter pendant le chargement de la configuration, le chargement sera terminé lorsque le bouton sera cliquable.</string>
+    <string name="presentation3">Visez un tableau et des informations supplémentaire apparaitront dessus.</string>
+    <string name="presentation4">Vous pouvez balayer l\'écran à gauche ou à droite pour changer le contenu à afficher.</string>
 </resources>

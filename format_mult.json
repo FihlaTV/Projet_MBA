@@ -1,0 +1,55 @@
+{
+    "canvas": [
+        {
+            "feature": {
+                "files": [
+                    {
+                        "MD5": "60fefe30996fa744915cab3047652e31",
+                        "name": "Nouveau.iset",
+                        "path": "https://www.dropbox.com/s/91c0ghpm4peycgz/Nouveau.iset?dl=1"
+                    },
+                    {
+                        "MD5": "6eb56804a340d44542809a5878297027",
+                        "name": "Nouveau.fset3",
+                        "path": "https://www.dropbox.com/s/ve67n6ikoh6u4yw/Nouveau.fset3?dl=1"
+                    },
+                    {
+                        "MD5": "02cab83acf7d1e5e6eb228e328b15d04",
+                        "name": "Nouveau.fset",
+                        "path": "https://www.dropbox.com/s/tazdh81t97kqm3j/Nouveau.fset?dl=1"
+                    }
+                ],
+                "name": "Nouveau"
+            },
+            "models": [
+                {
+                    "blc": "-96.0227,46,0",
+                    "brc": "-6.81818,46,0",
+                    "name": "Nouveau",
+                    "textures": [
+                        {
+                            "text": "Debut de texte",
+                            "type": "texte"
+                        }
+                    ],
+                    "tlc": "-96.0227,92.5,0",
+                    "trc": "-6.81818,92.5,0"
+                },
+                {
+                    "blc": "-97.1591,24.5,2",
+                    "brc": "-14.7727,24.5,2",
+                    "name": "Nouveau",
+                    "textures": [
+                        {
+                            "text": "Suite du texte",
+                            "type": "texte"
+                        }
+                    ],
+                    "tlc": "-97.1591,70,2",
+                    "trc": "-14.7727,70,2"
+                }
+            ],
+            "name": "Nouveau+"
+        }
+    ]
+}

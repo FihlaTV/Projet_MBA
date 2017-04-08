@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.norips.ar.ARMuseum.Drawable.Drawable;
-import fr.norips.ar.ARMuseum.Drawable.RectTex;
 import fr.norips.ar.ARMuseum.Drawable.Rectangle;
 
 /**
@@ -67,8 +66,9 @@ public class Model {
     }
 
     public void init(){
-        if(drawable == null)
-            drawable = new RectTex(pos,pathToTextures,context);
+        if(drawable != null)
+            drawable.init();
+
     }
 
     public void nextPage(){
@@ -79,7 +79,7 @@ public class Model {
         drawable.previousTexture();
     }
 
-    public void initGL(ShaderProgram shaderProgram){
-        drawable.setShaderProgram(shaderProgram);
+    public void initGL(ShaderProgram shaderProgram,ShaderProgram movieShader){
+        drawable.setShaderProgram(shaderProgram,movieShader);
     }
 }

@@ -54,11 +54,7 @@ public class Canvas {
      */
     public void initGL(ShaderProgram shaderProgram,ShaderProgram shaderProgramMovie){
         for(Model m : models){
-            m.initGL(shaderProgram);
-        }
-        for(Model m : modelsMovie){
-            if(shaderProgramMovie != null)
-                m.initGL(shaderProgramMovie);
+            m.initGL(shaderProgram,shaderProgramMovie);
         }
     }
     /**
