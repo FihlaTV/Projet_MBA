@@ -17,6 +17,7 @@ import android.util.Log;
 
 public class TextureTXT extends TextureIMG {
     private float ratioX;
+    private static final String TAG = "TextureTXT";
     public TextureTXT(Context c,String text,float ratioWidth) {
         super(c,text);
         ratioX = ratioWidth;
@@ -53,7 +54,7 @@ public class TextureTXT extends TextureIMG {
             textLayout = new StaticLayout(
                     text, paint,(int) width, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
         }
-        Bitmap bitmap = Bitmap.createBitmap((int)width, (int)height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap((int)textLayout.getWidth(), (int)textLayout.getHeight(), Bitmap.Config.ARGB_8888);
         // get a canvas to paint over the bitmap
         Canvas canvas = new Canvas(bitmap);
         int alpha = (int)(0.5 * 255.0f);
@@ -62,8 +63,9 @@ public class TextureTXT extends TextureIMG {
         // get position of text's top left corner
         float x = (bitmap.getWidth() - width) / 2;
         float y = 0;
-
-
+        Log.d(TAG,"Text : " + text);
+        Log.d(TAG,"Layout : " + textLayout.getWidth() + "x" + textLayout.getHeight());
+        Log.d(TAG,"Expected : " + width + "x" + height);
 
 
         // draw text to the Canvas center
@@ -71,6 +73,29 @@ public class TextureTXT extends TextureIMG {
         canvas.translate(x, y);
         textLayout.draw(canvas);
         canvas.restore();
+        Log.d(TAG,"Bitmap : " + bitmap.getWidth() + "x" + bitmap.getHeight());
+        bitmap = resize(bitmap,(int)width,(int)height);
         return bitmap;
+    }
+
+    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > 1) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
     }
 }
