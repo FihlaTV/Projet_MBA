@@ -48,6 +48,7 @@ public class TextureMOV extends Texture implements SurfaceTexture.OnFrameAvailab
     }
     @Override
     public void paint() {
+        super.paint();
         if(finished == false) {
             loadGLTexture();
         } else {
