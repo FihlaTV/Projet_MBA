@@ -68,7 +68,7 @@ public class TextureIMG extends Texture {
         if(handler!=null) {
             //Time out
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, 10000);
+            handler.postDelayed(runnable, 1000);
         }
         if(finished == false) {
             Log.d(TAG,"loadGLTexture called");
