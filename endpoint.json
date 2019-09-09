@@ -2,7 +2,7 @@
   "endpoint": [
     {
       "name": "Musée des Beaux Arts de Bordeaux",
-      "url": "http://norips.me/format_mult.json"
+      "url": "https://github.com/FihlaTV/Projet_MBA/edit/master/format_mult.json"
     },
     {
       "name": "MAQ",
